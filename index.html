@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="styles.css">
+		<title>Scripture Notes</title>
+	</head>
+	<body>
+		<div id="usernameDiv">
+			<p id="username">Enter Username:</p>
+			<input id = "usernameInput" type="text" style="">
+			<button id="usernameButton" onclick="checkUsername()">Enter</button>
+			<p id="goodUser"></p>
+		</div>
+		<div class="row">
+		  <div class="column" style="background-color:#bbb;">
+		  	<h2>Search</h2>
+		  	<input type="text" id="searchText"> <button id="searchTextButton" onclick="searchForNote()">Search</button><br>
+		  	<h4>Search by...</h4>
+			<input type="radio" id="tag" name="search" value="Tag" checked>
+			<label for="tag">Tag</label>
+			<input type="radio" id="text" name="search" value="Text">
+     		<label for="text">Text</label> 
+     		<button id="showAllTagsButton" onclick="showAllTags()">Show All Tags</button> <br> <br>
+
+     		<div class="searchArea" id="searchResults"></div>
+
+     		
+    	  </div>
+		  <div class="column"style="background-color:#ccc;">
+		  	<h2>Show Note</h2>
+		  	<input type="text" id="idToShow">
+		  	<button id="idToShowButton" onclick="showNote()">Go</button>
+		  	<input type="radio" id="onlyShowNote" name="onlyShowNote" value="Show"checked>
+     		<label for="onlyShowNote">Show</label> 
+     		<input type="radio" id="addNote" name="onlyShowNote" value="Add Below" >
+			<label for="addNote">Add Below</label><br> <br>
+		  	<div class="noteArea" id="noteArea"></div>
+		  	<button id="editShownNote" onclick="editShownNote()" style = "visibility: hidden;">Edit</button>
+		  	
+    		
+    	  </div>
+		  <div class="column" style="background-color:#ddd;">
+		  	<h2>Edit/Create</h2>
+			<input type="radio" id="editRadio" name="createRadio" value="Edit Existing Note" onchange="showEdit()"checked>
+     		<label for="editRadio">Edit Existing Note</label> 
+     		<input type="radio" id="createRadio" name="createRadio" value="Create New" onchange="showCreate()">
+			<label for="createRadio">Create New Note</label><br> <br>
+		  	
+			<div id="editOptions">
+			  	<input type="text" id="idToEdit">
+			  	<button id="idToEditButton" onclick="editNote()">Show</button><br>
+    		</div>
+		  	
+
+		  	<p class="hiddenText" id="editResponse"></p>
+		  	<button id="createAnother" onclick="showCreate()" style="visibility: hidden">Create Another</button>
+		  	<div id="editDiv" class="hidden">
+
+		  		<h4 id="titleHeader">Title</h4>
+			    <textarea id="titleEditArea" ></textarea> <br>
+		  		
+		  		<h4 id="bodyEditDiv">Body</h4>
+			    <textarea id="noteEditArea" ></textarea> <br>
+
+			    <h4 id="tagEditDiv">Tags</h4>
+			    <textarea id="tagEditArea" ></textarea> <br>
+			    <button id="submitEdit" onclick="submitEdit()">Submit Edit</button>
+			    <button id="submitCreate" onclick="submitCreate()" style="visibility: hidden">Submit New Note</button>
+				
+				<div id="publicPrivate">
+					<input type="radio" id="privateRadio" name="publicPrivate" value="Private" checked>
+		     		<label for="privateRadio">Private</label> 
+		     		<input type="radio" id="create_radio" name="publicPrivate" value="Public" >
+					<label for="create_radio">Public</label>
+				</div>
+			</div>
+		  </div>
+		</div>
+		<hr>
+				  	<h2>Search Commentary</h2>
+				  	<h4>Enter verse, chapter, book or section</h4>
+		  	<input type="text" id="ldssToShow">
+		  	<button id="showLdss" onclick="showLdss()">Go</button>
+		  	<p id="scripture"></p>
+		  	<span id="ldssArea" ></span>
+		  	<h4>Comments</h4> <br>
+		  	<span id="ldssCommentArea"></span>
+		  	<div id="commentDiv">
+			  	<h4>Add Comment</h4>
+			  	<textarea id="ldssComment" ></textarea>
+			  	<button id="addComment" onclick="commentOnLdss()">Add Comment</button>
+			</div>
+
+
+	</body>
+
+	<script src="https://cdn.rawgit.com/showdownjs/showdown/1.0.1/dist/showdown.min.js"></script>
+	<script src="showdown-table.min.js"></script>
+	<script src="main.js"></script>
+
+</html>

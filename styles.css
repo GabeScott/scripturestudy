@@ -1,0 +1,169 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+
+/* Create three equal columns that floats next to each other */
+.column {
+  float: left;
+  width: 33.33%;
+  padding: 10px;
+  height: 100%;
+}
+
+textarea {
+     width: 100%;
+     -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+     -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+     box-sizing: border-box;         /* Opera/IE 8+ */
+     height:45%;
+}
+
+#ldssArea{
+    column-count: 3;
+    column-rule-style: solid;
+    column-gap: 40px;
+    margin-bottom: 20px;
+    padding: 5% 2% 1% 2%;
+    display: block;
+    white-space: pre-wrap
+}
+
+#ldssCommentArea{
+  display:block;
+  white-space: pre-wrap;
+}
+
+#ldssComment{
+  height:100px;
+}
+
+#commentDiv{
+  visibility: hidden;
+  margin: 0 0 20px 0;
+}
+
+
+#goodUser{
+    display: block;
+    width: 70%;
+    float: left;
+    margin: 10px 0 0 15px;
+}
+
+#titleHeader{
+  margin: 10px 0 5px 0;
+}
+
+#bodyEditDiv{
+  margin: 10px 0 5px 0;
+}
+
+#tagEditDiv{
+  margin: 10px 0 5px 0;
+}
+
+
+#usernameButton{
+	margin-left: 10px;
+  margin-top: 10px;
+  float:left;
+}
+
+#editShownNote{
+  visibility: hidden;
+  margin: 0 auto;
+  display: block;
+  min-width: 10px;
+  width: 30%;
+
+}
+
+#usernameInput{
+  float:left; 
+  margin-top:10px
+}
+
+#tagEditArea{
+	height:25px;
+}
+
+#titleEditArea{
+  height:25px;
+}
+
+#usernameDiv{
+  display: block;
+  height: 5%;
+}
+
+#username{
+	float:left;
+  margin: 10px 15px 0 0;
+}
+
+
+.hidden{
+	visibility: hidden;
+  height: 100%;
+}
+
+.padding{
+	width: 1%;
+	float:left;
+	height: 100%
+}
+
+
+#showAllTagsButton{
+  margin-left: 10px;
+}
+
+#publicPrivate{
+	float: right;
+    width: 50%;
+}
+
+#idToShow{
+  margin-bottom: 10px;
+}
+
+.noteArea{
+	width:100%;
+	height:75%;
+	line-height:1.5em;
+	overflow:auto;
+	padding:5px;
+  margin-bottom: 15px;
+}
+
+
+.searchArea{
+  width:100%;
+  height:70%;
+  line-height:1.5em;
+  overflow:auto;
+  padding:5px;
+}
+
+.row{
+	height: 90%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+  height: 100%;
+}
+
+
+.displayNone{
+  visibility: hidden;
+  display: none;
+}
