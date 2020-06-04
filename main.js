@@ -1,5 +1,7 @@
-let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default/noteapi"
-		let sessionUsername = "" 
+		let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default/noteapi";
+		let sessionUsername = "" ;
+		let visibleNotes = [];
+
 
 
 		document.getElementById("searchText").addEventListener("keyup", function(event) {
@@ -69,7 +71,6 @@ let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default
 
 				} 
 				else {
-					var response = JSON.parse(response);
 					document.getElementById("commentDiv").style.visibility = "hidden";
 					document.getElementById("ldssArea").innerHTML = response		
 				  	document.getElementById("ldssCommentArea").innerHTML = ""
@@ -108,7 +109,6 @@ let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default
 		}
 
 
-
 		function showAllTags(){
 			document.getElementById("tag").checked=true;
 
@@ -129,6 +129,7 @@ let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default
 			})
 		}		
 
+
 		function searchForNote(){
 			var searchText = document.getElementById("searchText").value.trim();
 
@@ -137,6 +138,7 @@ let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default
 			else 
 				searchByText(searchText);
 		}
+
 
 		function searchByTag(text){
 			var data = JSON.stringify({"tag": text, "user": sessionUsername, "action":"searchByTag"});
@@ -157,6 +159,7 @@ let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default
 			})
 		}
 
+
 		function searchByText(text){
 			var data = JSON.stringify({"text": text, "user": sessionUsername, "action":"searchByText"});
 
@@ -176,6 +179,7 @@ let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default
 			})
 		}
 
+
 		function getSearchByTagResults(json){
 			var result = 'Results: <br>';
 
@@ -187,6 +191,7 @@ let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default
 			}
 			return result;
 		}
+
 
 		function getShowAllTagResults(json){
 			var result = 'Results: <br>';
@@ -228,8 +233,7 @@ let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default
 
 			  	if((nextResult.match(/<b>/g) || []).length != (nextResult.match(/<\/b>/g) || []).length)
 					nextResult += "</b>";
-				if((nextResult.match(/<</g) || []).length > 0)
-					console.log("HERE")
+
 				nextResult = nextResult.replace("<<", "<")
 
 				result += nextResult;		  	 
@@ -251,7 +255,6 @@ let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default
 		function showNoteFromSearchResults(element){
 			document.getElementById("idToShow").value = element.innerHTML;
 			showNote();
-
 		}
 
 
@@ -267,6 +270,7 @@ let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default
             } 
 		}
 
+
 		function showNote(){
 			id = document.getElementById("idToShow").value.trim();
 
@@ -278,16 +282,21 @@ let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default
 				
      				var html = convertMDToHTML(json["body"]);
      				var tagText = convertTagsToHTML(json["tags"].split(", "));
-     				var title = convertMDToHTML(json["title"]);
+     				var title = convertMDToHTML("# "+json["title"]);
 
 					if(document.getElementById("onlyShowNote").checked || document.getElementById("noteArea").innerHTML == ""){
+						visibleNotes = [];
 						document.getElementById("noteArea").innerHTML = id + "\n\n"+ title + "\n" + html + "\n\nTags: " + tagText;
+						visibleNotes[0] = {"id":id,"body":id + "\n\n"+ title + "\n" + html + "\n\nTags: " + tagText};
 						document.getElementById("editShownNote").style = "visibility:visible;"
 					}
 					else{
-						document.getElementById("noteArea").innerHTML += "<br><br><br><hr><br><br>" + id + "\n\n" + html + "\n\nTags: " + tagText;
+						visibleNotes.push({"id":id,"body":id + "\n\n"+ title + "\n" + html + "\n\nTags: " + tagText});
 						document.getElementById("editShownNote").style = "visibility:hidden;"
+						displayVisibleNotes();
 					}
+
+					
 				} 
 				else {
 					document.getElementById("noteArea").innerHTML = "No results found";
@@ -295,6 +304,47 @@ let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default
 			}, function(rej){
 				console.log(rej);
 			})
+		}
+
+
+		function displayVisibleNotes(){
+			document.getElementById("noteArea").innerHTML = "";
+			var addExtraButtons = false;
+			if(visibleNotes.length > 1)
+				addExtraButtons = true;
+
+			for(var i=0; i<visibleNotes.length; i++){
+				var id = visibleNotes[i]["id"];
+
+				document.getElementById("noteArea").innerHTML += visibleNotes[i]["body"];
+
+				if(addExtraButtons){
+					document.getElementById("noteArea").innerHTML += "<br><br><button value=" + i +
+					" onclick=\"removeNote(this)\">Remove</button>&emsp;"+
+					"<button value=" + id + 
+					" onclick=editSpecificNote(this)>Edit</button>" + 
+					"<br><br><br><hr><br><br>";
+				}
+				else{
+					document.getElementById("editShownNote").style = "visibility:visible;"
+				}
+
+			}
+		}
+
+
+		function editSpecificNote(button){
+			var id = button.value;
+			document.getElementById("idToEdit").value = id;
+			document.getElementById("submitCreate").style = "visibility: hidden";
+			editNote();
+		}
+
+
+		function removeNote(button){
+			var index = parseInt(button.value);
+			visibleNotes.splice(index,1);
+			displayVisibleNotes();
 		}
 
 
@@ -331,6 +381,7 @@ let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default
 			searchForNote();
 		}
 
+
 		async function editNote(){
 			document.getElementById("editRadio").checked=true;
 			id = document.getElementById("idToEdit").value.trim();
@@ -351,10 +402,12 @@ let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default
 				  		noteEditAreaText = json["body"];
 				  		tagEditAreaText = json["tags"];
 				  		titleEditAreaText = json["title"];
+				  		document.getElementById("titleHeader").innerHTML = "Title";
 				  		document.getElementById("bodyEditDiv").innerHTML = "Body";
 				  		document.getElementById("tagEditDiv").innerHTML = "Tags";
 				  	}
 				  	else if(permissions == 'a'){
+				  		document.getElementById("titleHeader").innerHTML = "Title (you did not create this note, can only append)";
 				  		document.getElementById("bodyEditDiv").innerHTML = "Body (you did not create this note, can only append)";
 				  		document.getElementById("tagEditDiv").innerHTML = "Tags (you did not create this note, can only append)";
 				  	}
@@ -382,7 +435,6 @@ let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default
 			document.getElementById("noteEditArea").value = noteEditAreaText;
 			document.getElementById("tagEditArea").value = tagEditAreaText;
 			document.getElementById("publicPrivate").style="visibility:hidden";
-
 		}
 
 
@@ -390,14 +442,15 @@ let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default
 			if(confirm("Are you sure you want to submit this edit?")){
 				newText = document.getElementById("noteEditArea").value;
 				newTags = document.getElementById("tagEditArea").value;
+				newTitle = document.getElementById("titleEditArea").value;
 				id = document.getElementById("idToEdit").value.trim();
 
-				if(newText.length == 0 || newTags.length == 0){
+				if(newText.length == 0 || newTags.length == 0 || newTitle.length == 0){
 					if(!confirm("Are you sure you want to submit with empty text?"))
 						return;
 				}
 
-				var data = JSON.stringify({"id": id, "body":newText, "tags":newTags, "user": sessionUsername, "action":"edit"});
+				var data = JSON.stringify({"id": id, "title":newTitle, "body":newText, "tags":newTags, "user": sessionUsername, "action":"edit"});
 
 				sendRequest(data).then(function(response){
 					document.getElementById("editDiv").style="visibility:hidden";
@@ -407,9 +460,25 @@ let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default
 				}, function(rej){
 					console.log(reg);
 				})
+				
+
+				updateVisibleNotes(JSON.parse(data));
+				displayVisibleNotes();
 
 			}
 		}
+
+
+		function updateVisibleNotes(data){
+			var id = data["id"];
+			var title = convertMDToHTML("# "+data["title"])
+			var body = convertMDToHTML(data["body"])
+
+			for(var i=0; i<visibleNotes.length; i++)
+				if(id == visibleNotes[i]["id"])
+					visibleNotes[i]["body"] = id + "\n\n"+ title + "\n" + body + "\n\nTags: " + data["tags"];
+		}
+
 
 		function showEdit(){
 			document.getElementById("editResponse").style="display: none"
@@ -420,6 +489,7 @@ let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default
 			document.getElementById("publicPrivate").style="visibility:hidden";
 			document.getElementById("createAnother").style="visibility:hidden";
 		}
+
 
 		function showCreate(){
 			document.getElementById("editResponse").style="display: none"
@@ -437,6 +507,7 @@ let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default
 			document.getElementById("createAnother").style="visibility:hidden; display: none";
 			document.getElementById("privateRadio").checked=true;
 		}
+
 
 		function submitCreate(){
 			if(sessionUsername == ""){
@@ -470,6 +541,7 @@ let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default
 			}
 		}
 
+
 		function updateEditResponse(text){
 			document.getElementById("editDiv").style="visibility:hidden";
 			document.getElementById("submitCreate").style="visibility:hidden";
@@ -478,6 +550,7 @@ let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default
 			document.getElementById("editResponse").innerHTML=text;
 			document.getElementById("publicPrivate").style="visibility:hidden";
 		}
+
 
 		function checkUsername(){
 			var username = document.getElementById("usernameInput").value;
@@ -517,5 +590,4 @@ let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default
 			    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 			    xhr.send(data);
 			  });
-
 		}
