@@ -312,7 +312,7 @@ function showNote(){
 
 function addBookLinks(html){
 	html = html.replace(/[\n\r]+/g, '');
-	html = html.replace(new RegExp(Object.keys(bookDict).join(" [0-9]+:[0-9]+|"), 'gi'), (match) => createDropDownMenu(match));
+	html = html.replace(new RegExp(Object.keys(bookDict).join(" [0-9]+:?[0-9]*|"), 'gi'), (match) => createDropDownMenu(match));
 	return html;
 
 }
@@ -326,12 +326,12 @@ function createDropDownMenu(scripture){
 	if(parts.length == 3){
 		book = parts[0] + " " + parts[1];
 		chapter = parts[2].split(":")[0]
-		verse = parts[2].split(":")[1]
+		verse = parts[2].split(":")[1] ?? ''
 	}
 	else{
 		book = parts[0]
 		chapter = parts[1].split(":")[0]
-		verse = parts[1].split(":")[1]
+		verse = parts[1].split(":")[1] ?? ''
 	}
 	url = "https://www.churchofjesuschrist.org/"+bookDict[book]+chapter+"."+verse
 	var menu = `</p><div class="dropdown">
