@@ -229,7 +229,7 @@ function getSearchByTextResults(json, text){
 		if(ownerDict[items[i][0]] == 'private')
 			color = 'style=\"color:red;\"';
 
-	  	var nextResult = "<b><a href=\"#\" onclick=\"showNoteFromSearchResults(this);return false; "+color+">"+items[i][0] + "</a>: " + titleDict[items[i][0]] + " "
+	  	var nextResult = "<b><a href=\"#\" onclick=\"showNoteFromSearchResults(this);return false;\" "+color+">"+items[i][0] + "</a>: " + titleDict[items[i][0]] + " "
 	  	 + " ("+items[i][1] + " hits)</b><br><i>&nbsp;&nbsp;&nbsp;"
 	  	 + textDict[items[i][0]].substring(Math.max(index-50, 0), Math.min(index+50, textSize)) + "</i><br>";		
 
@@ -300,12 +300,13 @@ function showNote(){
 
 			if(document.getElementById("onlyShowNote").checked || document.getElementById("noteArea").innerHTML == ""){
 				visibleNotes = [];
-				document.getElementById("noteArea").innerHTML = id +" - " + owner + "\n\n"+ title + "\n" + html + "\n\nTags: " + tagText;
-				visibleNotes[0] = {"id":id,"body":id + "\n\n"+ title + "\n" + html + "\n\nTags: " + tagText};
+				var noteHTML = id +" - " + owner + "\n\n"+ title + "\n" + html + "\n\nTags: " + tagText;
+				document.getElementById("noteArea").innerHTML = noteHTML
+				visibleNotes[0] = {"id":id,"body":noteHTML};
 				document.getElementById("editShownNote").style = "visibility:visible;"
 			}
 			else{
-				visibleNotes.push({"id":id,"body":id + "\n\n"+ title + "\n" + html + "\n\nTags: " + tagText});
+				visibleNotes.push({"id":id,"body":id +" - " + owner +"\n\n"+ title + "\n" + html + "\n\nTags: " + tagText});
 				document.getElementById("editShownNote").style = "visibility:hidden;"
 				displayVisibleNotes();
 			}
@@ -389,32 +390,6 @@ function scrollToItem(item) {
     } else {
         window.scrollTo(0, item.offsetTop)
     }
-}
-
-
-function displayVisibleNotes(){
-	document.getElementById("noteArea").innerHTML = "";
-	var addExtraButtons = false;
-	if(visibleNotes.length > 1)
-		addExtraButtons = true;
-
-	for(var i=0; i<visibleNotes.length; i++){
-		var id = visibleNotes[i]["id"];
-
-		document.getElementById("noteArea").innerHTML += visibleNotes[i]["body"];
-
-		if(addExtraButtons){
-			document.getElementById("noteArea").innerHTML += "<br><br><button value=" + i +
-			" onclick=\"removeNote(this)\">Remove</button>&emsp;"+
-			"<button value=" + id + 
-			" onclick=editSpecificNote(this)>Edit</button>" + 
-			"<br><br><br><hr><br><br>";
-		}
-		else{
-			document.getElementById("editShownNote").style = "visibility:visible;"
-		}
-
-	}
 }
 
 
@@ -565,6 +540,7 @@ function submitEdit(){
 
 		  	updateVisibleNotes(editedNoteData);
 			displayVisibleNotes();
+			fixInlineParagraphs();
 		}, function(rej){
 			console.log(reg);
 		})
@@ -579,11 +555,40 @@ function updateVisibleNotes(data){
 	var id = data["id"];
 	var title = convertMDToHTML("# "+data["title"])
 	var body = convertMDToHTML(data["body"])
+	body = addBookLinks(body);
 	var owner = data['owner']
 
 	for(var i=0; i<visibleNotes.length; i++)
 		if(id == visibleNotes[i]["id"])
 			visibleNotes[i]["body"] = id + " - " + owner + "\n\n"+ title + "\n" + body + "\n\nTags: " + convertTagsToHTML(data["tags"].split(", "));
+}
+
+
+function displayVisibleNotes(){
+
+	document.getElementById("noteArea").innerHTML = "";
+	var addExtraButtons = false;
+	if(visibleNotes.length > 1)
+		addExtraButtons = true;
+
+	for(var i=0; i<visibleNotes.length; i++){
+		var id = visibleNotes[i]["id"];
+
+		document.getElementById("noteArea").innerHTML += visibleNotes[i]["body"];
+
+		if(addExtraButtons){
+			document.getElementById("noteArea").innerHTML += "<br><br><button value=" + i +
+			" onclick=\"removeNote(this)\">Remove</button>&emsp;"+
+			"<button value=" + id + 
+			" onclick=editSpecificNote(this)>Edit</button>" + 
+			"<br><br><br><hr><br><br>";
+		}
+		else{
+			document.getElementById("editShownNote").style = "visibility:visible;"
+			document.getElementById("idToShow").value = id;
+		}
+
+	}
 }
 
 
