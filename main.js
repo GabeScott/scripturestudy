@@ -10,7 +10,7 @@ document.getElementById("searchText").addEventListener("keyup", function(event) 
     // Cancel the default action, if needed
     event.preventDefault();
     // Trigger the button element with a click
-    document.getElementById("searchTextButton").click();
+    searchForNote();
   }
 });
 
@@ -20,7 +20,7 @@ document.getElementById("idToShow").addEventListener("keyup", function(event) {
     // Cancel the default action, if needed
     event.preventDefault();
     // Trigger the button element with a click
-    document.getElementById("idToShowButton").click();
+    showNote();
   }
 });
 
@@ -30,7 +30,7 @@ document.getElementById("idToEdit").addEventListener("keyup", function(event) {
     // Cancel the default action, if needed
     event.preventDefault();
     // Trigger the button element with a click
-    document.getElementById("idToEditButton").click();
+    editNote();
   }
 });		
 

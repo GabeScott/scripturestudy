@@ -71,6 +71,10 @@ textarea {
   margin: 10px 0 5px 0;
 }
 
+#editOptions{
+  float:left;
+}
+
 
 #usernameButton{
 	margin-left: 10px;
@@ -122,9 +126,11 @@ textarea {
 	height: 100%
 }
 
+#idToEdit{
+  margin-right:4px;
+}
 
 #showAllTagsButton{
-  margin-left: 10px;
 }
 
 #publicPrivate{

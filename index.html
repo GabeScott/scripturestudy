@@ -15,12 +15,13 @@
 		<div class="row">
 		  <div class="column" style="background-color:#bbb;">
 		  	<h2>Search</h2>
-		  	<input type="text" id="searchText"> <button id="searchTextButton" onclick="searchForNote()">Search</button><br>
-		  	<h4>Search by...</h4>
+		  	<input type="text" id="searchText"> 
 			<input type="radio" id="tag" name="search" value="Tag" checked>
 			<label for="tag">Tag</label>
 			<input type="radio" id="text" name="search" value="Text">
      		<label for="text">Text</label> 
+     		<br>
+     		<br>
      		<button id="showAllTagsButton" onclick="showAllTags()">Show All Tags</button> <br> <br>
 
      		<div class="searchArea" id="searchResults"></div>
@@ -30,7 +31,6 @@
 		  <div class="column"style="background-color:#ccc;">
 		  	<h2>Show Note</h2>
 		  	<input type="text" id="idToShow">
-		  	<button id="idToShowButton" onclick="showNote()">Go</button>
 		  	<input type="radio" id="onlyShowNote" name="onlyShowNote" value="Show"checked>
      		<label for="onlyShowNote">Show</label> 
      		<input type="radio" id="addNote" name="onlyShowNote" value="Add Below" >
@@ -42,15 +42,13 @@
     	  </div>
 		  <div class="column" style="background-color:#ddd;">
 		  	<h2>Edit/Create</h2>
-			<input type="radio" id="editRadio" name="createRadio" value="Edit Existing Note" onchange="showEdit()"checked>
-     		<label for="editRadio">Edit Existing Note</label> 
-     		<input type="radio" id="createRadio" name="createRadio" value="Create New" onchange="showCreate()">
-			<label for="createRadio">Create New Note</label><br> <br>
-		  	
-			<div id="editOptions">
+		  	<div id="editOptions">
 			  	<input type="text" id="idToEdit">
-			  	<button id="idToEditButton" onclick="editNote()">Show</button><br>
     		</div>
+			<input type="radio" id="editRadio" name="createRadio" value="Edit Existing Note" onchange="showEdit()"checked>
+     		<label for="editRadio">Edit</label> 
+     		<input type="radio" id="createRadio" name="createRadio" value="Create New" onchange="showCreate()">
+			<label for="createRadio">Create</label><br> <br>
 		  	
 
 		  	<p class="hiddenText" id="editResponse"></p>
