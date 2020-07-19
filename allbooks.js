@@ -83,7 +83,7 @@ var bookDict = {
 'Ether': '/study/scriptures/bofm/ether/',
 'Moroni': '/study/scriptures/bofm/moro/',
 'Doctrine and Covenants': '/study/scriptures/dc-testament/dc/',
-'D&C': '/study/scriptures/dc-testament/dc/',
+'D&amp;C': '/study/scriptures/dc-testament/dc/',
 'Official Declaration 1': '/study/scriptures/dc-testament/od/',
 'Official Declaration 2': '/study/scriptures/dc-testament/od/2?lang=eng',
 'Joseph Smith—Matthew': '/study/scriptures/pgp/js-m/',

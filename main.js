@@ -75,6 +75,9 @@ function showLdss(){
 			document.getElementById("ldssArea").innerHTML = response		
 		  	document.getElementById("ldssCommentArea").innerHTML = ""
 		}	
+
+		scrollToItem(document.getElementById("ldssArea"));
+
 		
 	}, function(rej){
 		console.log(rej);
@@ -160,6 +163,22 @@ function searchByTag(text){
 }
 
 
+function getSearchByTagResults(json){
+	var result = 'Results: <br>';
+
+	for(var i=0; i < json.length; i++){
+		var title = json[i][3];
+		var color = 'style=\"color:blue;\"';
+		if(json[i][4] == 'private')
+			color='style=\"color:red;\"';
+	  	result += "<b><a href=\"#\" onclick=\"showNoteFromSearchResults(this);return false;\" " + color + ">"+json[i][0] + "</a>: " + " "+title+"</b><br><i>&nbsp;&nbsp;&nbsp;" + 
+		json[i][1].substring(0, 100) + "</i><br>";
+
+	}
+	return result;
+}
+
+
 function searchByText(text){
 	var data = JSON.stringify({"text": text, "user": sessionUsername, "action":"searchByText"});
 
@@ -180,40 +199,19 @@ function searchByText(text){
 }
 
 
-function getSearchByTagResults(json){
-	var result = 'Results: <br>';
-
-	for(var i=0; i < json.length; i++){
-		var title = json[i][3];
-	  	result += "<b><a href=\"#\" onclick=\"showNoteFromSearchResults(this);return false;\">"+json[i][0] + "</a>: " + " "+title+"</b><br><i>&nbsp;&nbsp;&nbsp;" + 
-		json[i][1].substring(0, 100) + "</i><br>";
-
-	}
-	return result;
-}
-
-
-function getShowAllTagResults(json){
-	var result = 'Results: <br>';
-	var keys = Object.keys(json).sort()
-	for(var i=0; i < keys.length; i++){
-	  	result += "<a href=\"#\" onclick=\"showTagFromSearchResults(this);return false;\">"+keys[i] + "</a> " + " ("+json[keys[i]]+")<br>";
-	}
-	return result;
-}
-
-
 function getSearchByTextResults(json, text){
 	var result = 'Results: <br>';
 	var resultDict = {};
 	var textDict = {};
 	var titleDict = {};
+	var ownerDict = {};
 
 	for(var i=0; i < json.length; i++){
 			var count = (json[i][1].toLowerCase().match(new RegExp(text.toLowerCase(), "g")) || []).length;
 			resultDict[json[i][0]]=count;			
 			textDict[json[i][0]] = json[i][1].replace(new RegExp(text, 'gi'), (match) => "<b>"+match+"</b>"); 
-			titleDict[json[i][0]] = json[i][3].replace();	 
+			titleDict[json[i][0]] = json[i][3];
+			ownerDict[json[i][0]] = json[i][4];
 	}
 
 	var items = Object.keys(resultDict).map(function(key) {
@@ -227,7 +225,11 @@ function getSearchByTextResults(json, text){
 		let index=textDict[items[i][0]].toLowerCase().indexOf(text.toLowerCase())
 		textSize = textDict[items[i][0]].length
 
-	  	var nextResult = "<b><a href=\"#\" onclick=\"showNoteFromSearchResults(this);return false;\">"+items[i][0] + "</a>: " + titleDict[items[i][0]] + " "
+		var color = 'style=\"color:blue;\"';
+		if(ownerDict[items[i][0]] == 'private')
+			color = 'style=\"color:red;\"';
+
+	  	var nextResult = "<b><a href=\"#\" onclick=\"showNoteFromSearchResults(this);return false; "+color+">"+items[i][0] + "</a>: " + titleDict[items[i][0]] + " "
 	  	 + " ("+items[i][1] + " hits)</b><br><i>&nbsp;&nbsp;&nbsp;"
 	  	 + textDict[items[i][0]].substring(Math.max(index-50, 0), Math.min(index+50, textSize)) + "</i><br>";		
 
@@ -240,6 +242,16 @@ function getSearchByTextResults(json, text){
 	}
 
 
+	return result;
+}
+
+
+function getShowAllTagResults(json){
+	var result = 'Results: <br>';
+	var keys = Object.keys(json).sort()
+	for(var i=0; i < keys.length; i++){
+	  	result += "<a href=\"#\" onclick=\"showTagFromSearchResults(this);return false;\">"+keys[i] + "</a> " + " ("+json[keys[i]]+")<br>";
+	}
 	return result;
 }
 
@@ -284,10 +296,11 @@ function showNote(){
 				html = addBookLinks(html);
 				var tagText = convertTagsToHTML(json["tags"].split(", "));
 				var title = convertMDToHTML("# "+json["title"]);
+				var owner = json['owner'];
 
 			if(document.getElementById("onlyShowNote").checked || document.getElementById("noteArea").innerHTML == ""){
 				visibleNotes = [];
-				document.getElementById("noteArea").innerHTML = id + "\n\n"+ title + "\n" + html + "\n\nTags: " + tagText;
+				document.getElementById("noteArea").innerHTML = id +" - " + owner + "\n\n"+ title + "\n" + html + "\n\nTags: " + tagText;
 				visibleNotes[0] = {"id":id,"body":id + "\n\n"+ title + "\n" + html + "\n\nTags: " + tagText};
 				document.getElementById("editShownNote").style = "visibility:visible;"
 			}
@@ -361,6 +374,21 @@ function fixInlineParagraphs(){
 function showCommentaryForScripture(element){
 	document.getElementById("ldssToShow").value = element.name;
 	showLdss();
+}
+
+
+function scrollToItem(item) {
+    var diff=(item.offsetTop-window.scrollY)/8
+    var windowHeight = window.innerHeight;
+    if (Math.abs(diff)>1) {
+        window.scrollTo(0, (window.scrollY+diff))
+        clearTimeout(window._TO)
+        if ((window.innerHeight + window.scrollY) < document.body.scrollHeight){
+        	window._TO=setTimeout(scrollToItem, 30, item)
+    	}
+    } else {
+        window.scrollTo(0, item.offsetTop)
+    }
 }
 
 
@@ -453,6 +481,8 @@ async function editNote(){
 		  	var noteEditAreaText = "";
 		  	var tagEditAreaText = "";
 		  	var titleEditAreaText = "";
+
+		  	var owner = json['owner'];
 		  	
 
 		  	if(permissions == 'e'){
@@ -462,11 +492,15 @@ async function editNote(){
 		  		document.getElementById("titleHeader").innerHTML = "Title";
 		  		document.getElementById("bodyEditDiv").innerHTML = "Body";
 		  		document.getElementById("tagEditDiv").innerHTML = "Tags";
+		  		document.getElementById("publicPrivate").style="visibility:visible";
+		  		document.getElementById("create_radio").checked=(owner == 'public');
 		  	}
 		  	else if(permissions == 'a'){
 		  		document.getElementById("titleHeader").innerHTML = "Title (you did not create this note, can only append)";
 		  		document.getElementById("bodyEditDiv").innerHTML = "Body (you did not create this note, can only append)";
 		  		document.getElementById("tagEditDiv").innerHTML = "Tags (you did not create this note, can only append)";
+		  		document.getElementById("publicPrivate").style="visibility:hidden";
+		  		document.getElementById("create_radio").checked=true;
 		  	}
 
 		  	showNoteToEdit(titleEditAreaText, noteEditAreaText, tagEditAreaText);
@@ -491,7 +525,6 @@ function showNoteToEdit(titleEditAreaText, noteEditAreaText, tagEditAreaText){
 	document.getElementById("titleEditArea").value = titleEditAreaText;
 	document.getElementById("noteEditArea").value = noteEditAreaText;
 	document.getElementById("tagEditArea").value = tagEditAreaText;
-	document.getElementById("publicPrivate").style="visibility:hidden";
 }
 
 
@@ -502,25 +535,41 @@ function submitEdit(){
 		newTitle = document.getElementById("titleEditArea").value;
 		id = document.getElementById("idToEdit").value.trim();
 
+		var owner = 'public';
+		if(document.getElementById('privateRadio').checked)
+			owner = 'private';
+
 		if(newText.length == 0 || newTags.length == 0 || newTitle.length == 0){
 			if(!confirm("Are you sure you want to submit with empty text?"))
 				return;
 		}
 
-		var data = JSON.stringify({"id": id, "title":newTitle, "body":newText, "tags":newTags, "user": sessionUsername, "action":"edit"});
+		var data = JSON.stringify({"id": id, "title":newTitle, "body":newText, "tags":newTags, "owner":owner, "user": sessionUsername, "action":"edit"});
+		var editedNoteData = {}
 
 		sendRequest(data).then(function(response){
+			var json = JSON.parse(response);
+			responseText = json['response']
+			editedNoteData['title'] = json['new_title'];
+			editedNoteData['body'] = json['new_body'];
+			editedNoteData['tags'] = json['new_tags'];
+			editedNoteData['id']=id;
+			editedNoteData['owner']='public';
+			if(document.getElementById("privateRadio").checked)
+				editedNoteData['owner'] ='private';
+
 			document.getElementById("editDiv").style="visibility:hidden";
 			document.getElementById("submitEdit").style="visibility:hidden";
 		  	document.getElementById("editResponse").style="display: block";
-		  	document.getElementById("editResponse").innerHTML=response;
+		  	document.getElementById("editResponse").innerHTML=responseText;
+
+		  	updateVisibleNotes(editedNoteData);
+			displayVisibleNotes();
 		}, function(rej){
 			console.log(reg);
 		})
 		
-
-		updateVisibleNotes(JSON.parse(data));
-		displayVisibleNotes();
+		document.getElementById("publicPrivate").style="visibility:hidden";
 
 	}
 }
@@ -530,10 +579,11 @@ function updateVisibleNotes(data){
 	var id = data["id"];
 	var title = convertMDToHTML("# "+data["title"])
 	var body = convertMDToHTML(data["body"])
+	var owner = data['owner']
 
 	for(var i=0; i<visibleNotes.length; i++)
 		if(id == visibleNotes[i]["id"])
-			visibleNotes[i]["body"] = id + "\n\n"+ title + "\n" + body + "\n\nTags: " + data["tags"];
+			visibleNotes[i]["body"] = id + " - " + owner + "\n\n"+ title + "\n" + body + "\n\nTags: " + convertTagsToHTML(data["tags"].split(", "));
 }
 
 
