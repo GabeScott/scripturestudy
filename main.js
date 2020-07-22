@@ -326,36 +326,51 @@ function showNote(){
 
 function addBookLinks(html){
 	html = html.replace(/[\n\r]+/g, '');
-	html = html.replace(new RegExp(Object.keys(bookDict).join(" [0-9]+:?[0-9]*|"), 'gi'), (match) => createDropDownMenu(match));
+	html = html.replace(new RegExp(Object.keys(bookDict).join("[ ]?[0-9]*:?[0-9]*-?[0-9]*|"), 'gi'), (match) => createDropDownMenu(match));
 	return html;
 
 }
 
 
-function createDropDownMenu(scripture){
+function createDropDownMenu(match){
+	var scripture = match.trim();
 	var parts = scripture.split(" ")
-	var book = ''
-	var chapter = ''
-	var verse = ''
-	if(parts.length == 3){
-		book = parts[0] + " " + parts[1];
-		chapter = parts[2].split(":")[0]
-		verse = parts[2].split(":")[1] ?? ''
-	}
-	else{
-		book = parts[0]
-		chapter = parts[1].split(":")[0]
-		verse = parts[1].split(":")[1] ?? ''
-	}
-	url = "https://www.churchofjesuschrist.org/"+bookDict[book]+chapter+"."+verse
-	var menu = `</p><div class="dropdown">
-		  <a>${scripture}</a>
-		  <div class="dropdown-content">
-		    <a href="#" name="${scripture}" onclick="showCommentaryForScripture(this); return false;">Show LDSS</a>
-		    <a href="${url}" target="_blank">Go To Scripture</a>
-		  </div>
-		</div>
-		<p style="display:inline">`
+
+	var book = parts[0];
+	for(var i = 1; i < parts.length; i++)
+		if(!Object.keys(bookDict).includes(book))
+			book += " " + parts[i] ;
+
+	var chapterVersePart = parts[parts.length-1];
+	
+	var chapter = '';
+	if (chapterVersePart.includes(":"))
+		chapter = chapterVersePart.split(":")[0];
+
+	else if (Number.isInteger(Number(chapterVersePart)))
+		chapter = chapterVersePart;
+
+	else
+		chapter='';
+
+	var allverses = chapterVersePart.split(":")[1] ?? '';
+	var ldssverse = allverses.split("-")[0] ?? allverses;
+
+	var ldsslink = book;
+
+	if(chapter != '')
+		ldsslink += " " + chapter;
+
+	if(ldssverse != '')
+		ldsslink += ":" + ldssverse;
+	
+	url = "https://www.churchofjesuschrist.org"+bookDict[book]+chapter+"."+allverses;
+	var menu = `</p>
+		<div class="dropdown">
+			<a>${scripture}</a>
+		<div class="dropdown-content">
+		<a href="#" name="${ldsslink}" onclick="showCommentaryForScripture(this); return false;">Show LDSS</a>
+		<a href="${url}" target="_blank">Go To Scripture</a></div></div><p style="display:inline">`;
 
 
 
@@ -385,7 +400,7 @@ function scrollToItem(item) {
         window.scrollTo(0, (window.scrollY+diff))
         clearTimeout(window._TO)
         if ((window.innerHeight + window.scrollY) < document.body.scrollHeight){
-        	window._TO=setTimeout(scrollToItem, 30, item)
+        	window._TO=setTimeout(scrollToItem, 10, item)
     	}
     } else {
         window.scrollTo(0, item.offsetTop)
