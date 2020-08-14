@@ -292,7 +292,7 @@ function showNote(){
 	  	if(isJSON(response)){
 		  	var json = JSON.parse(response);
 		
-				var html = convertMDToHTML(json["body"]);
+				var html = convertMDToHTML(json["body"] + "\n");
 				html = addBookLinks(html);
 				var tagText = convertTagsToHTML(json["tags"].split(", "));
 				var title = convertMDToHTML("# "+json["title"]);
@@ -326,7 +326,7 @@ function showNote(){
 
 function addBookLinks(html){
 	html = html.replace(/[\n\r]+/g, '');
-	html = html.replace(new RegExp(Object.keys(bookDict).join("[ ]?[0-9]*:?[0-9]*-?[0-9]*|"), 'gi'), (match) => createDropDownMenu(match));
+	html = html.replace(new RegExp(Object.keys(bookDict).join(" [0-9]+:?[0-9]*-?[0-9]*|") + " [0-9]+:?[0-9]*-?[0-9]*", 'gi'), (match) => createDropDownMenu(match));
 	return html;
 
 }
@@ -365,8 +365,7 @@ function createDropDownMenu(match){
 		ldsslink += ":" + ldssverse;
 	
 	url = "https://www.churchofjesuschrist.org"+bookDict[book]+chapter+"."+allverses;
-	var menu = `</p>
-		<div class="dropdown">
+	var menu = `</p><div class="dropdown">
 			<a>${scripture}</a>
 		<div class="dropdown-content">
 		<a href="#" name="${ldsslink}" onclick="showCommentaryForScripture(this); return false;">Show LDSS</a>
@@ -425,6 +424,7 @@ function removeNote(button){
 
 function convertMDToHTML(md){
 	converter = new showdown.Converter({extensions: ['table']});
+		md = md.replace(/\r\n|\r|\n/g, (match) => "\n<br>");
 		html = converter.makeHtml(md);
 		html = html.replace(/[0-9]{8}[a-z]+/g, (match) => "<a href=\"#\" onclick=\"showNoteFromSearchResults(this);return false;\">"+match+"</a>");
 		return html;
@@ -569,7 +569,7 @@ function submitEdit(){
 function updateVisibleNotes(data){
 	var id = data["id"];
 	var title = convertMDToHTML("# "+data["title"])
-	var body = convertMDToHTML(data["body"])
+	var body = convertMDToHTML(data["body"] + "\n")
 	body = addBookLinks(body);
 	var owner = data['owner']
 
