@@ -424,12 +424,8 @@ function removeNote(button){
 
 function convertMDToHTML(md){
 	converter = new showdown.Converter({extensions: ['table']});
-<<<<<<< HEAD
 		md = md.replace(/\r\n|\r|\n/g, (match) => match+ "<br>");
 		md = md.replace(/<br>-/g, (match) => "\n-"); //This fixes when there are bullets in md
-=======
-		md = md.replace(/\r\n|\r|\n/g, (match) => "\n<br>");
->>>>>>> 1066e179fc2b7387e60600331fd31ef7c6d0c7c9
 		html = converter.makeHtml(md);
 		html = html.replace(/[0-9]{8}[a-z]+/g, (match) => "<a href=\"#\" onclick=\"showNoteFromSearchResults(this);return false;\">"+match+"</a>");
 		return html;
