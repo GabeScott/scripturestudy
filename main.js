@@ -206,8 +206,12 @@ function getSearchByTextResults(json, text){
 	var titleDict = {};
 	var ownerDict = {};
 
+	var body_index = 1;
+	var title_index = 3;
+
 	for(var i=0; i < json.length; i++){
-			var count = (json[i][1].toLowerCase().match(new RegExp(text.toLowerCase(), "g")) || []).length;
+			var count = (json[i][body_index].toLowerCase().match(new RegExp(text.toLowerCase(), "g")) || []).length + 
+						(json[i][title_index].toLowerCase().match(new RegExp(text.toLowerCase(), "g")) || []).length;
 			resultDict[json[i][0]]=count;			
 			textDict[json[i][0]] = json[i][1].replace(new RegExp(text, 'gi'), (match) => "<b>"+match+"</b>"); 
 			titleDict[json[i][0]] = json[i][3];
@@ -328,7 +332,6 @@ function addBookLinks(html){
 	html = html.replace(/[\n\r]+/g, '');
 	html = html.replace(new RegExp(Object.keys(bookDict).join(" [0-9]+:?[0-9]*-?[0-9]*|") + " [0-9]+:?[0-9]*-?[0-9]*", 'gi'), (match) => createDropDownMenu(match));
 	return html;
-
 }
 
 
@@ -424,9 +427,7 @@ function removeNote(button){
 
 function convertMDToHTML(md){
 	converter = new showdown.Converter({extensions: ['table']});
-		md = md.replace(/\r\n|\r|\n/g, (match) => match+ "<br>");
-		md = md.replace(/<br>-/g, (match) => "\n-"); //This fixes when there are bullets in md
-		md = md.replace(/<br>#/g, (match) => "\n#"); //This fixes headers
+		md = md.replace(/\r\n|\r|\n/g, (match) => "<br>"+match);
 		html = converter.makeHtml(md);
 		html = html.replace(/[0-9]{8}[a-z]+/g, (match) => "<a href=\"#\" onclick=\"showNoteFromSearchResults(this);return false;\">"+match+"</a>");
 		return html;
