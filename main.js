@@ -427,7 +427,6 @@ function convertMDToHTML(md){
 		md = md.replace(/\r\n|\r|\n/g, (match) => match+ "<br>");
 		md = md.replace(/<br>-/g, (match) => "\n-"); //This fixes when there are bullets in md
 		md = md.replace(/<br>#/g, (match) => "\n#"); //This fixes headers
-		
 		html = converter.makeHtml(md);
 		html = html.replace(/[0-9]{8}[a-z]+/g, (match) => "<a href=\"#\" onclick=\"showNoteFromSearchResults(this);return false;\">"+match+"</a>");
 		return html;
