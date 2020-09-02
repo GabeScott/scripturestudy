@@ -2,7 +2,8 @@ let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default
 let sessionUsername = "" ;
 let visibleNotes = [];
 
-
+showInitialNote();
+loginInitialUser()
 
 document.getElementById("searchText").addEventListener("keyup", function(event) {
   // Number 13 is the "Enter" key on the keyboard
@@ -271,6 +272,30 @@ function showTagFromSearchResults(element){
 function showNoteFromSearchResults(element){
 	document.getElementById("idToShow").value = element.innerHTML;
 	showNote();
+}
+
+
+function showInitialNote(){
+	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+	const noteid = urlParams.get('note')
+	
+	if (noteid){
+		document.getElementById("idToShow").value = noteid;
+		showNote();
+	}
+}
+
+
+function loginInitialUser(){
+	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+	const user = urlParams.get('user');
+
+	if (user){
+		document.getElementById("usernameInput").value = user;
+		checkUsername();
+	}
 }
 
 
