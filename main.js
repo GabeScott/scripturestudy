@@ -56,6 +56,30 @@ document.getElementById("ldssToShow").addEventListener("keyup", function(event) 
 });
 
 
+function showInitialNote(){
+	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+	const noteid = urlParams.get('note')
+	
+	if (noteid){
+		document.getElementById("idToShow").value = noteid;
+		showNote();
+	}
+}
+
+
+function loginInitialUser(){
+	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+	const user = urlParams.get('user');
+
+	if (user){
+		document.getElementById("usernameInput").value = user;
+		checkUsername();
+	}
+}
+
+
 function showLdss(){
 	var searchText = document.getElementById("ldssToShow").value;
 	var data = JSON.stringify({"action":"showLdss", "searchText":searchText});
@@ -66,13 +90,13 @@ function showLdss(){
 
 		if(isJSON(response)){
 			var response = JSON.parse(response);
-		  	document.getElementById("commentDiv").style.visibility = "visible";	
+		  	showCommentDiv();	
 		  	document.getElementById("ldssArea").innerHTML = response["name"] + "\n\n"+ response["content"]		
 		  	document.getElementById("ldssCommentArea").innerHTML = response["comments"]			
 
 		} 
 		else {
-			document.getElementById("commentDiv").style.visibility = "hidden";
+			hideCommentDiv();
 			document.getElementById("ldssArea").innerHTML = response		
 		  	document.getElementById("ldssCommentArea").innerHTML = ""
 		}	
@@ -275,30 +299,6 @@ function showNoteFromSearchResults(element){
 }
 
 
-function showInitialNote(){
-	const queryString = window.location.search;
-	const urlParams = new URLSearchParams(queryString);
-	const noteid = urlParams.get('note')
-	
-	if (noteid){
-		document.getElementById("idToShow").value = noteid;
-		showNote();
-	}
-}
-
-
-function loginInitialUser(){
-	const queryString = window.location.search;
-	const urlParams = new URLSearchParams(queryString);
-	const user = urlParams.get('user');
-
-	if (user){
-		document.getElementById("usernameInput").value = user;
-		checkUsername();
-	}
-}
-
-
 function isJSON(text){
 	if (typeof text !== "string") { 
         return false; 
@@ -332,11 +332,11 @@ function showNote(){
 				var noteHTML = id +" - " + owner + "\n\n"+ title + "\n" + html + "\n\nTags: " + tagText;
 				document.getElementById("noteArea").innerHTML = noteHTML
 				visibleNotes[0] = {"id":id,"body":noteHTML};
-				document.getElementById("editShownNote").style = "visibility:visible;"
+				showEditCurrentNoteButton();
 			}
 			else{
 				visibleNotes.push({"id":id,"body":id +" - " + owner +"\n\n"+ title + "\n" + html + "\n\nTags: " + tagText});
-				document.getElementById("editShownNote").style = "visibility:hidden;"
+				hideEditCurrentNoteButton()
 				displayVisibleNotes();
 			}
 
@@ -438,7 +438,7 @@ function scrollToItem(item) {
 function editSpecificNote(button){
 	var id = button.value;
 	document.getElementById("idToEdit").value = id;
-	document.getElementById("submitCreate").style = "visibility: hidden";
+	hideSubmitCreateButton();
 	editNote();
 }
 
@@ -473,7 +473,7 @@ function convertTagsToHTML(tags){
 
 function editShownNote(){
 	document.getElementById("idToEdit").value = document.getElementById("idToShow").value;
-	document.getElementById("submitCreate").style = "visibility: hidden";
+	hideSubmitCreateButton();
 	editNote();
 }
 
@@ -507,17 +507,13 @@ async function editNote(){
 		  		noteEditAreaText = json["body"];
 		  		tagEditAreaText = json["tags"];
 		  		titleEditAreaText = json["title"];
-		  		document.getElementById("titleHeader").innerHTML = "Title";
-		  		document.getElementById("bodyEditDiv").innerHTML = "Body";
-		  		document.getElementById("tagEditDiv").innerHTML = "Tags";
-		  		document.getElementById("publicPrivate").style="visibility:visible";
+		  		setEditDivTitles();
+		  		showPublicPrivateRadioButtons();
 		  		document.getElementById("create_radio").checked=(owner == 'public');
 		  	}
 		  	else if(permissions == 'a'){
-		  		document.getElementById("titleHeader").innerHTML = "Title (you did not create this note, can only append)";
-		  		document.getElementById("bodyEditDiv").innerHTML = "Body (you did not create this note, can only append)";
-		  		document.getElementById("tagEditDiv").innerHTML = "Tags (you did not create this note, can only append)";
-		  		document.getElementById("publicPrivate").style="visibility:hidden";
+		  		setEditDivTitlesAppend();
+		  		hidePublicPrivateRadioButtons();
 		  		document.getElementById("create_radio").checked=true;
 		  	}
 
@@ -526,8 +522,7 @@ async function editNote(){
 		} 
 		else {
 			showEdit()
-			document.getElementById("editResponse").style = "display: block";
-			document.getElementById("editResponse").innerHTML = "No results found";
+			showEditResponseText("No results found");
 		}
 	}, function(rej){
 		console.log(rej);
@@ -535,15 +530,6 @@ async function editNote(){
 }
 
 
-function showNoteToEdit(titleEditAreaText, noteEditAreaText, tagEditAreaText){
-	document.getElementById("editResponse").innerHTML = "";
-	document.getElementById("editResponse").style = "display: none";
-	document.getElementById("editDiv").style="visibility:visible";
-	document.getElementById("submitEdit").style="visibility:visible"
-	document.getElementById("titleEditArea").value = titleEditAreaText;
-	document.getElementById("noteEditArea").value = noteEditAreaText;
-	document.getElementById("tagEditArea").value = tagEditAreaText;
-}
 
 
 function submitEdit(){
@@ -576,19 +562,18 @@ function submitEdit(){
 			if(document.getElementById("privateRadio").checked)
 				editedNoteData['owner'] ='private';
 
-			document.getElementById("editDiv").style="visibility:hidden";
-			document.getElementById("submitEdit").style="visibility:hidden";
-		  	document.getElementById("editResponse").style="display: block";
-		  	document.getElementById("editResponse").innerHTML=responseText;
-
+			hideEditDiv();
+			hideSubmitEditButton();
+		  	showEditResponseText(responseText);
 		  	updateVisibleNotes(editedNoteData);
 			displayVisibleNotes();
 			fixInlineParagraphs();
+
 		}, function(rej){
 			console.log(reg);
 		})
 		
-		document.getElementById("publicPrivate").style="visibility:hidden";
+		hidePublicPrivateRadioButtons();
 
 	}
 }
@@ -627,7 +612,7 @@ function displayVisibleNotes(){
 			"<br><br><br><hr><br><br>";
 		}
 		else{
-			document.getElementById("editShownNote").style = "visibility:visible;"
+			showEditCurrentNoteButton();
 			document.getElementById("idToShow").value = id;
 		}
 
@@ -636,31 +621,26 @@ function displayVisibleNotes(){
 
 
 function showEdit(){
-	document.getElementById("editResponse").style="display: none"
-	document.getElementById("editResponse").innerHTML=""
-	document.getElementById("editOptions").style="visibility:visible; display: block;"
-	document.getElementById("submitCreate").style="visibility:hidden"
-	document.getElementById("editDiv").style="visibility:hidden"
-	document.getElementById("publicPrivate").style="visibility:hidden";
-	document.getElementById("createAnother").style="visibility:hidden";
+	hideEditResponseText();
+	showEditOptions();
+	hideSubmitCreateButton();
+	hideEditDiv();
+	hidePublicPrivateRadioButtons();
+	hideCreateAnotherButton();
 }
 
 
 function showCreate(){
-	document.getElementById("editResponse").style="display: none"
-	document.getElementById("editResponse").innerHTML=""
-	document.getElementById("titleEditArea").value = "";
-	document.getElementById("noteEditArea").value = "";
-	document.getElementById("tagEditArea").value = "";
-	document.getElementById("editOptions").style="visibility:hidden; display: none"
-	document.getElementById("submitEdit").style="visibility:hidden"
-	document.getElementById("submitCreate").style="visibility:visible"
-	document.getElementById("editDiv").style="visibility:visible"
-	document.getElementById("bodyEditDiv").innerHTML = "Body";
-	document.getElementById("tagEditDiv").innerHTML = "Tags";
-	document.getElementById("publicPrivate").style="visibility:visible";
-	document.getElementById("createAnother").style="visibility:hidden; display: none";
-	document.getElementById("privateRadio").checked=true;
+	hideEditResponseText();
+	resetEditAreas();
+	hideEditOptions();
+	hideSubmitEditButton();
+	showSubmitCreateButton();
+	showEditDiv();
+	setEditDivTitles();
+	showPublicPrivateRadioButtons()
+	showCreateAnotherButton();
+	checkPrivateRadioButton();
 }
 
 
@@ -698,12 +678,11 @@ function submitCreate(){
 
 
 function updateEditResponse(text){
-	document.getElementById("editDiv").style="visibility:hidden";
-	document.getElementById("submitCreate").style="visibility:hidden";
-	document.getElementById("createAnother").style="visibility:visible";
-	document.getElementById("editResponse").style="display: block"
-	document.getElementById("editResponse").innerHTML=text;
-	document.getElementById("publicPrivate").style="visibility:hidden";
+	hideEditDiv();
+	hideSubmitCreateButton();
+	showCreateAnotherButton();
+	showEditResponseText(text);
+	hidePublicPrivateRadioButtons();
 }
 
 
@@ -745,4 +724,134 @@ function sendRequest(data){
 	    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 	    xhr.send(data);
 	  });
+}
+
+
+function showNoteToEdit(titleEditAreaText, noteEditAreaText, tagEditAreaText){
+	hideEditResponseText();	
+	showEditDiv();
+	showSubmitEditButton();
+	document.getElementById("titleEditArea").value = titleEditAreaText;
+	document.getElementById("noteEditArea").value = noteEditAreaText;
+	document.getElementById("tagEditArea").value = tagEditAreaText;
+}
+
+
+function showEditDiv(){
+	document.getElementById("editDiv").style="visibility:visible";
+}
+
+
+function hideEditDiv(){
+	document.getElementById("editDiv").style="visibility:hidden";
+}
+
+
+function hideEditResponseText(){
+	document.getElementById("editResponse").innerHTML = "";
+	document.getElementById("editResponse").style = "display: none";
+}
+
+
+function showEditResponseText(text){
+	document.getElementById("editResponse").style="display: block";
+	document.getElementById("editResponse").innerHTML=text;
+}
+
+
+function showSubmitEditButton(){
+	document.getElementById("submitEdit").style="visibility:visible";
+	document.getElementById("submitEdit").style="display:block";
+}
+
+
+function hideSubmitEditButton(){
+	document.getElementById("submitEdit").style="visibility:hidden";
+	document.getElementById("submitEdit").style="display:none";
+}
+
+
+function showCommentDiv(){
+	document.getElementById("commentDiv").style.visibility = "visible";
+}
+
+
+function hideCommentDiv(){
+	document.getElementById("commentDiv").style.visibility = "hidden";
+}
+
+
+function showPublicPrivateRadioButtons(){
+	document.getElementById("publicPrivate").style="visibility:visible";
+}
+
+
+function hidePublicPrivateRadioButtons(){
+	document.getElementById("publicPrivate").style="visibility:hidden";
+}
+
+
+function showEditOptions(){
+	document.getElementById("editOptions").style="visibility:visible; display: block;"
+}
+
+
+function hideEditOptions(){
+	document.getElementById("editOptions").style="visibility:hidden; display: none"
+}
+
+
+function hideSubmitCreateButton(){
+	document.getElementById("submitCreate").style="visibility:hidden"
+}
+
+
+function showSubmitCreateButton(){
+	document.getElementById("submitCreate").style="visibility:visible";
+}
+
+
+function hideCreateAnotherButton(){
+	document.getElementById("createAnother").style="visibility:hidden";
+}
+
+
+function setEditDivTitles(){
+	document.getElementById("bodyEditDiv").innerHTML = "Body";
+	document.getElementById("tagEditDiv").innerHTML = "Tags";
+	document.getElementById("titleHeader").innerHTML = "Title";
+}
+
+
+function setEditDivTitlesAppend(){
+	document.getElementById("titleHeader").innerHTML = "Title (you did not create this note, can only append)";
+	document.getElementById("bodyEditDiv").innerHTML = "Body (you did not create this note, can only append)";
+	document.getElementById("tagEditDiv").innerHTML = "Tags (you did not create this note, can only append)";
+}
+
+
+function showCreateAnotherButton(){
+	document.getElementById("createAnother").style="visibility:hidden; display: none";
+}
+
+
+function resetEditAreas(){
+	document.getElementById("titleEditArea").value = "";
+	document.getElementById("noteEditArea").value = "";
+	document.getElementById("tagEditArea").value = "";
+}
+
+
+function checkPrivateRadioButton(){
+	document.getElementById("privateRadio").checked=true;
+}
+
+
+function showEditCurrentNoteButton(){
+	document.getElementById("editShownNote").style = "visibility:visible;";
+}
+
+
+function hideEditCurrentNoteButton(){
+	document.getElementById("editShownNote").style = "visibility:hidden;";
 }
