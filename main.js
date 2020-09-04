@@ -2,8 +2,9 @@ let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default
 let sessionUsername = "" ;
 let visibleNotes = [];
 
+setNumNotesText();
 showInitialNote();
-loginInitialUser()
+loginInitialUser();
 
 document.getElementById("searchText").addEventListener("keyup", function(event) {
   // Number 13 is the "Enter" key on the keyboard
@@ -54,6 +55,17 @@ document.getElementById("ldssToShow").addEventListener("keyup", function(event) 
     document.getElementById("showLdss").click();
   }
 });
+
+
+function setNumNotesText(){
+	data =  JSON.stringify({"action":"count"})
+
+	sendRequest(data).then(function(response){
+		document.getElementById("title").innerHTML= "Scripture Notes - "+response+" Notes And Counting!"
+	}, function(rej){
+		console.log(rej);
+	})
+}
 
 
 function showInitialNote(){
@@ -454,8 +466,13 @@ function convertMDToHTML(md){
 	converter = new showdown.Converter({extensions: ['table']});
 		md = md.replace(/\r\n|\r|\n/g, (match) => "<br>"+match);
 		html = converter.makeHtml(md);
-		html = html.replace(/[0-9]{8}[a-z]+/g, (match) => "<a href=\"#\" onclick=\"showNoteFromSearchResults(this);return false;\">"+match+"</a>");
+		html = addNoteLinks(html);
 		return html;
+}
+
+
+function addNoteLinks(text){
+	return text.replace(/[0-9]{8}[a-z]+/g, (match) => "<a href=\"#\" onclick=\"showNoteFromSearchResults(this);return false;\">"+match+"</a>");
 }
 
 
@@ -558,13 +575,14 @@ function submitEdit(){
 			editedNoteData['body'] = json['new_body'];
 			editedNoteData['tags'] = json['new_tags'];
 			editedNoteData['id']=id;
+
 			editedNoteData['owner']='public';
 			if(document.getElementById("privateRadio").checked)
 				editedNoteData['owner'] ='private';
 
 			hideEditDiv();
 			hideSubmitEditButton();
-		  	showEditResponseText(responseText);
+		  	showEditResponseText(addNoteLinks(responseText));
 		  	updateVisibleNotes(editedNoteData);
 			displayVisibleNotes();
 			fixInlineParagraphs();
