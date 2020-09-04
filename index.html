@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script src='https://kit.fontawesome.com/a076d05399.js'></script>
 		<link rel="stylesheet" href="styles.css">
 		<title id='title'>Scripture Notes</title>
 	</head>
@@ -13,7 +14,7 @@
 			<p id="goodUser"></p>
 		</div>
 		<div class="row">
-		  <div class="column" style="background-color:#bbb;">
+		  <div class="column" style="background-color:#bbb;" id='searchColumn'>
 		  	<h2>Search</h2>
 		  	<input type="text" id="searchText"> 
 			<input type="radio" id="tag" name="search" value="Tag" checked>
@@ -25,10 +26,11 @@
      		<button id="showAllTagsButton" onclick="showAllTags()">Show All Tags</button> <br> <br>
 
      		<div class="searchArea" id="searchResults"></div>
+     		<button class='expandButton' onclick="expandSearchDiv()" id='expandSearch'><i class='fas fa-expand'></i></button>
 
      		
     	  </div>
-		  <div class="column"style="background-color:#ccc;">
+		  <div class="column"style="background-color:#ccc;" id='displayColumn'>
 		  	<h2>Show Note</h2>
 		  	<input type="text" id="idToShow">
 		  	<input type="radio" id="onlyShowNote" name="onlyShowNote" value="Show"checked>
@@ -36,11 +38,11 @@
      		<input type="radio" id="addNote" name="onlyShowNote" value="Add Below" >
 			<label for="addNote">Add</label><br> <br>
 		  	<div class="noteArea" id="noteArea"></div>
-		  	<button id="editShownNote" onclick="editShownNote()" style = "visibility: hidden;">Edit</button>
-		  	
+		  	<button id="editShownNote" onclick="editShownNote()" style = "visibility: hidden; display:none">Edit</button>
+		  	<button class='expandButton'  onclick="expandDisplayDiv()" id='expandDisplay'><i class='fas fa-expand'></i></button>
     		
     	  </div>
-		  <div class="column" style="background-color:#ddd;">
+		  <div class="column" style="background-color:#ddd;" id='editColumn'>
 		  	<h2>Edit/Create</h2>
 		  	<div id="editOptions">
 			  	<input type="text" id="idToEdit">
@@ -73,6 +75,7 @@
 					<label for="create_radio">Public</label>
 				</div>
 			</div>
+			<button class='expandButton'  onclick="expandEditDiv()" id='expandEdit'><i class='fas fa-expand'></i></button>
 		  </div>
 		</div>
 		<hr>

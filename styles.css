@@ -12,7 +12,23 @@ html, body {
   float: left;
   width: 33.33%;
   padding: 10px;
+  position:relative;
   height: 100%;
+}
+
+.expandedColumn{
+  width:100%;
+  display:block;
+  visibility: visible;
+  height:100%;
+  padding:10px;
+  position:relative;
+}
+
+.minimizedColumn{
+  width:0%;
+  display:none;
+  visibility: hidden;
 }
 
 textarea {
@@ -51,10 +67,14 @@ textarea {
   display:inline-block;
 }
 
+.expandButton{
+  position: absolute;
+  right:0;
+  bottom:0;
+}
 
 #goodUser{
     display: block;
-    width: 70%;
     float: left;
     margin: 10px 0 0 15px;
 }
@@ -88,6 +108,7 @@ textarea {
   display: block;
   min-width: 10px;
   width: 30%;
+  margin-top: 10px;
 
 }
 
@@ -149,7 +170,6 @@ textarea {
 	line-height:1.5em;
 	overflow:auto;
 	padding:5px;
-  margin-bottom: 15px;
 }
 
 

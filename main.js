@@ -308,6 +308,7 @@ function showTagFromSearchResults(element){
 function showNoteFromSearchResults(element){
 	document.getElementById("idToShow").value = element.innerHTML;
 	showNote();
+	resetColumns();
 }
 
 
@@ -492,6 +493,7 @@ function editShownNote(){
 	document.getElementById("idToEdit").value = document.getElementById("idToShow").value;
 	hideSubmitCreateButton();
 	editNote();
+	resetColumns();
 }
 
 
@@ -592,6 +594,7 @@ function submitEdit(){
 		})
 		
 		hidePublicPrivateRadioButtons();
+		resetColumns();
 
 	}
 }
@@ -866,10 +869,48 @@ function checkPrivateRadioButton(){
 
 
 function showEditCurrentNoteButton(){
-	document.getElementById("editShownNote").style = "visibility:visible;";
+	document.getElementById("editShownNote").style = "visibility:visible; display:block;";
 }
 
 
 function hideEditCurrentNoteButton(){
-	document.getElementById("editShownNote").style = "visibility:hidden;";
+	document.getElementById("editShownNote").style = "visibility:hidden;display:none;";
+}
+
+
+function expandSearchDiv(){
+	document.getElementById("searchColumn").className = "expandedColumn";
+	document.getElementById("editColumn").className = "minimizedColumn";
+	document.getElementById("displayColumn").className = "minimizedColumn";
+
+	document.getElementById("expandSearch").onclick = resetColumns
+}
+
+
+function expandEditDiv(){
+	document.getElementById("searchColumn").className = "minimizedColumn";
+	document.getElementById("editColumn").className = "expandedColumn";
+	document.getElementById("displayColumn").className = "minimizedColumn";
+
+	document.getElementById("expandEdit").onclick = resetColumns
+}
+
+
+function expandDisplayDiv(){
+	document.getElementById("searchColumn").className = "minimizedColumn";
+	document.getElementById("editColumn").className = "minimizedColumn";
+	document.getElementById("displayColumn").className = "expandedColumn";
+
+	document.getElementById("expandDisplay").onclick = resetColumns
+}
+
+
+function resetColumns(){
+	document.getElementById("searchColumn").className = "column";
+	document.getElementById("editColumn").className = "column";
+	document.getElementById("displayColumn").className = "column";
+
+	document.getElementById("expandDisplay").onclick = expandDisplayDiv
+	document.getElementById("expandEdit").onclick = expandEditDiv
+	document.getElementById("expandSearch").onclick = expandSearchDiv
 }
