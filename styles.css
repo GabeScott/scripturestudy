@@ -71,6 +71,14 @@ textarea {
   position: absolute;
   right:0;
   bottom:0;
+  margin-right: 3px;
+  margin-bottom: 3px;
+}
+
+.fas{
+  display: block;
+  width:100%;
+  padding: 1px 0px 0px 0px;
 }
 
 #goodUser{
