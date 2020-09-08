@@ -81,8 +81,6 @@ async function showInitialNote(){
 		nextNote = notes[i];
 		document.getElementById("idToShow").value = nextNote;
 		await showNote();
-
-		
 	}	
 }
 
@@ -367,7 +365,7 @@ async function showNote(){
 				showEditCurrentNoteButton();
 			}
 			else{
-				visibleNotes.push({"id":data["id"],"body":id +" - " + owner +"\n\n"+ title + "\n" + html + "\n\nTags: " + tagText});
+				visibleNotes.push({"id":id,"body":id +" - " + owner +"\n\n"+ title + "\n" + html + "\n\nTags: " + tagText});
 				hideEditCurrentNoteButton()
 				displayVisibleNotes();
 			}
