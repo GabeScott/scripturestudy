@@ -71,11 +71,20 @@ function setNumNotesText(){
 function showInitialNote(){
 	const queryString = window.location.search;
 	const urlParams = new URLSearchParams(queryString);
-	const noteid = urlParams.get('note')
+	const notes = urlParams.get('note').split(",");
 	
-	if (noteid){
-		document.getElementById("idToShow").value = noteid;
+	if (notes.length == 1){
+		document.getElementById("idToShow").value = notes[0];
 		showNote();
+	}
+	else{
+		document.getElementById("addNote").checked=true;
+
+		for(var i = 0; i < notes.length; i++){
+			nextNote = notes[i];
+			document.getElementById("idToShow").value = nextNote;
+			showNote();
+		}
 	}
 }
 
