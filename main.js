@@ -2,10 +2,7 @@ let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default
 let sessionUsername = "" ;
 let visibleNotes = [];
 
-loginInitialUser();
-setNumNotesText();
-showInitialNote();
-
+initializeWindow();
 
 document.getElementById("searchText").addEventListener("keyup", function(event) {
   // Number 13 is the "Enter" key on the keyboard
@@ -58,6 +55,13 @@ document.getElementById("ldssToShow").addEventListener("keyup", function(event) 
 });
 
 
+async function initializeWindow(){
+	await loginInitialUser();
+	setNumNotesText();
+	showInitialNote();
+}
+
+
 function setNumNotesText(){
 	data =  JSON.stringify({"action":"count"})
 
@@ -85,14 +89,14 @@ async function showInitialNote(){
 }
 
 
-function loginInitialUser(){
+async function loginInitialUser(){
 	const queryString = window.location.search;
 	const urlParams = new URLSearchParams(queryString);
 	const user = urlParams.get('user');
 
 	if (user){
 		document.getElementById("usernameInput").value = user;
-		checkUsername();
+		await checkUsername();
 	}
 }
 
@@ -729,12 +733,12 @@ function updateEditResponse(text){
 }
 
 
-function checkUsername(){
+async function checkUsername(){
 	var username = document.getElementById("usernameInput").value;
 
 	var data = JSON.stringify({"user":username, "action":"doesUserExist"});		
 
-	sendRequest(data).then(function(response){
+	await sendRequest(data).then(function(response){
 		if(response == "true"){
 			sessionUsername = username.toLowerCase();
 			document.getElementById("usernameInput").setAttribute('readonly', true);
