@@ -2,9 +2,10 @@ let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default
 let sessionUsername = "" ;
 let visibleNotes = [];
 
+loginInitialUser();
 setNumNotesText();
 showInitialNote();
-loginInitialUser();
+
 
 document.getElementById("searchText").addEventListener("keyup", function(event) {
   // Number 13 is the "Enter" key on the keyboard
@@ -68,24 +69,21 @@ function setNumNotesText(){
 }
 
 
-function showInitialNote(){
+async function showInitialNote(){
 	const queryString = window.location.search;
 	const urlParams = new URLSearchParams(queryString);
 	const notes = urlParams.get('note').split(",");
-	
-	if (notes.length == 1){
-		document.getElementById("idToShow").value = notes[0];
-		showNote();
-	}
-	else{
-		document.getElementById("addNote").checked=true;
 
-		for(var i = 0; i < notes.length; i++){
-			nextNote = notes[i];
-			document.getElementById("idToShow").value = nextNote;
-			showNote();
-		}
-	}
+	for(var i = 0; i < notes.length; i++){
+		if(i==1)
+			document.getElementById("addNote").checked=true;
+
+		nextNote = notes[i];
+		document.getElementById("idToShow").value = nextNote;
+		await showNote();
+
+		
+	}	
 }
 
 
@@ -346,12 +344,12 @@ function isJSON(text){
 }
 
 
-function showNote(){
+async function showNote(){
 	id = document.getElementById("idToShow").value.trim();
 
 	var data = JSON.stringify({"id": id, "user": sessionUsername, "action":"searchById"});
 
-	sendRequest(data).then(function(response){
+	await sendRequest(data).then(function(response){
 	  	if(isJSON(response)){
 		  	var json = JSON.parse(response);
 		
@@ -369,7 +367,7 @@ function showNote(){
 				showEditCurrentNoteButton();
 			}
 			else{
-				visibleNotes.push({"id":id,"body":id +" - " + owner +"\n\n"+ title + "\n" + html + "\n\nTags: " + tagText});
+				visibleNotes.push({"id":data["id"],"body":id +" - " + owner +"\n\n"+ title + "\n" + html + "\n\nTags: " + tagText});
 				hideEditCurrentNoteButton()
 				displayVisibleNotes();
 			}
@@ -384,6 +382,8 @@ function showNote(){
 	}, function(rej){
 		console.log(rej);
 	})
+
+
 }
 
 
@@ -444,7 +444,6 @@ function fixInlineParagraphs(){
 
 	for(var i = 0; i < allDropdowns.length; i++){
 		allDropdowns[i].previousSibling.style="display:inline;";
-		console.log(allDropdowns[i].previousSibling.innerHTML);
 		if((allDropdowns[i].previousSibling.previousSibling) && 
 			(allDropdowns[i].previousSibling.previousSibling.nodeName == 'P')){
 			allDropdowns[i].previousSibling.innerHTML = "<br>"+allDropdowns[i].previousSibling.innerHTML;
