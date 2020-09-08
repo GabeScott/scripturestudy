@@ -306,9 +306,21 @@ function showTagFromSearchResults(element){
 
 
 function showNoteFromSearchResults(element){
+	if (window.event.ctrlKey) {
+        controlClickEdit(element)
+        return;
+    }
 	document.getElementById("idToShow").value = element.innerHTML;
 	showNote();
 	resetColumns();
+}
+
+
+function controlClickEdit(element){
+	var id = element.innerHTML;
+	document.getElementById("idToEdit").value = id;
+	hideSubmitCreateButton();
+	editNote();
 }
 
 
