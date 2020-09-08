@@ -410,7 +410,7 @@ function createDropDownMenu(match){
 			<a>${scripture}</a>
 		<div class="dropdown-content">
 		<a href="#" name="${ldsslink}" onclick="showCommentaryForScripture(this); return false;">Show LDSS</a>
-		<a href="${url}" target="_blank">Go To Scripture</a></div></div><p style="display:inline">`;
+		<a href="${url}" target="_blank">Go To Scripture</a></div></div><p style="display:inline;">`;
 
 
 
@@ -422,7 +422,12 @@ function fixInlineParagraphs(){
 	var allDropdowns = document.getElementsByClassName("dropdown");
 
 	for(var i = 0; i < allDropdowns.length; i++){
-		allDropdowns[i].previousSibling.style="display:inline";
+		allDropdowns[i].previousSibling.style="display:inline;";
+		console.log(allDropdowns[i].previousSibling.innerHTML);
+		if((allDropdowns[i].previousSibling.previousSibling) && 
+			(allDropdowns[i].previousSibling.previousSibling.nodeName == 'P')){
+			allDropdowns[i].previousSibling.innerHTML = "<br>"+allDropdowns[i].previousSibling.innerHTML;
+		}
 	}
 }
 
@@ -465,8 +470,7 @@ function removeNote(button){
 
 function convertMDToHTML(md){
 	converter = new showdown.Converter({extensions: ['table']});
-		md = md.replace(/\r\n|\r|\n/g, (match) => "<br>"+match);
-		html = converter.makeHtml(md);
+		html = converter.makeHtml(md+"<br><br>");
 		html = addNoteLinks(html);
 		return html;
 }
