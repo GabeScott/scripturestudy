@@ -487,6 +487,7 @@ function removeNote(button){
 	var index = parseInt(button.value);
 	visibleNotes.splice(index,1);
 	displayVisibleNotes();
+	fixInlineParagraphs();
 }
 
 
