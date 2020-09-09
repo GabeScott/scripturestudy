@@ -448,7 +448,7 @@ function fixInlineParagraphs(){
 		allDropdowns[i].previousSibling.style="display:inline;";
 		if((allDropdowns[i].previousSibling.previousSibling) && 
 			(allDropdowns[i].previousSibling.previousSibling.nodeName == 'P')){
-			allDropdowns[i].previousSibling.innerHTML = "<br>"+allDropdowns[i].previousSibling.innerHTML;
+			allDropdowns[i].previousSibling.innerHTML = "<br><br>"+allDropdowns[i].previousSibling.innerHTML;
 		}
 	}
 }
