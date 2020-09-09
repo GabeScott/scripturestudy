@@ -450,7 +450,8 @@ function fixInlineParagraphs(){
 	for(var i = 0; i < allDropdowns.length; i++){
 		allDropdowns[i].previousSibling.style="display:inline;";
 		if((allDropdowns[i].previousSibling.previousSibling) && 
-			(allDropdowns[i].previousSibling.previousSibling.nodeName == 'P')){
+			allDropdowns[i].previousSibling.previousSibling.nodeName == 'P' &&
+			allDropdowns[i].previousSibling.previousSibling.style.display == 'inline'){
 			allDropdowns[i].previousSibling.innerHTML = "<br><br>"+allDropdowns[i].previousSibling.innerHTML;
 		}
 	}
@@ -496,10 +497,12 @@ function removeNote(button){
 
 function convertMDToHTML(md){
 	converter = new showdown.Converter({extensions: ['table']});
-		html = converter.makeHtml(md+"<br><br>");
-		html = addNoteLinks(html);
-		return html;
+	converter.setOption('simpleLineBreaks', true);
+	html = converter.makeHtml(md+"<br><br>");
+	html = addNoteLinks(html);
+	return html;
 }
+
 
 
 function addNoteLinks(text){
