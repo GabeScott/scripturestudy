@@ -319,6 +319,9 @@ function showNoteFromSearchResults(element){
         controlClickEdit(element)
         return;
     }
+    else if (window.event.shiftKey){
+    	document.getElementById("addNote").checked=true;
+    }
 	document.getElementById("idToShow").value = element.innerHTML;
 	showNote();
 	resetColumns();
