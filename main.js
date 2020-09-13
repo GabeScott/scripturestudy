@@ -211,6 +211,11 @@ function searchByTag(text){
 
 function getSearchByTagResults(json){
 	var result = 'Results: <br>';
+	
+	json.sort(function(a,b){
+		if ( a[0] == b[0] ) return 0;
+  		    return a[0] < b[0] ? -1 : 1;
+	})
 
 	for(var i=0; i < json.length; i++){
 		var title = json[i][3];
