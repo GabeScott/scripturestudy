@@ -369,6 +369,11 @@ async function showNote(){
 				var title = convertMDToHTML("# "+json["title"]);
 				var owner = json['owner'];
 
+				if(document.getElementById('text').checked){
+					html = highlightSearchTerms(html);
+					title = highlightSearchTerms(title);
+		  		}
+
 			if(document.getElementById("onlyShowNote").checked || document.getElementById("noteArea").innerHTML == ""){
 				visibleNotes = [];
 				var noteHTML = id +" - " + owner + "\n\n"+ title + "\n" + html + "\n\nTags: " + tagText;
@@ -394,6 +399,16 @@ async function showNote(){
 	})
 
 
+}
+
+
+function highlightSearchTerms(html){
+	var searchTerm = document.getElementById('searchText').value
+
+	html = html.replace(new RegExp("[^a-z^A-Z]"+searchTerm+"[^a-z^A-Z]", "gi"), 
+		(match) => match[0]+"<a style='color:yellow'>"+match.substring(1, match.length-1)+"</a>"+match[match.length-1]);
+
+	return html
 }
 
 
@@ -662,6 +677,7 @@ function displayVisibleNotes(){
 		var id = visibleNotes[i]["id"];
 
 		document.getElementById("noteArea").innerHTML += visibleNotes[i]["body"];
+		
 
 		if(addExtraButtons){
 			document.getElementById("noteArea").innerHTML += "<br><br><button value=" + i +
@@ -675,6 +691,9 @@ function displayVisibleNotes(){
 			document.getElementById("idToShow").value = id;
 		}
 
+	}
+	if(document.getElementById('text').checked){
+		document.getElementById("noteArea").innerHTML = highlightSearchTerms(document.getElementById("noteArea").innerHTML)
 	}
 }
 
