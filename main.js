@@ -405,8 +405,8 @@ async function showNote(){
 function highlightSearchTerms(html){
 	var searchTerm = document.getElementById('searchText').value
 
-	html = html.replace(new RegExp("[^a-z^A-Z]"+searchTerm+"[^a-z^A-Z]", "gi"), 
-		(match) => match[0]+"<a style='color:yellow'>"+match.substring(1, match.length-1)+"</a>"+match[match.length-1]);
+	html = html.replace(new RegExp(searchTerm, "gi"), 
+		(match) => "<a style='color:yellow'>"match+"</a>");
 
 	return html
 }
