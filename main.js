@@ -406,7 +406,7 @@ function highlightSearchTerms(html){
 	var searchTerm = document.getElementById('searchText').value
 
 	html = html.replace(new RegExp(searchTerm, "gi"), 
-		(match) => "<a style='color:yellow'>"match+"</a>");
+		(match) => "<a style='color:yellow'>"+match+"</a>");
 
 	return html
 }
