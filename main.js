@@ -76,7 +76,10 @@ function setNumNotesText(){
 async function showInitialNote(){
 	const queryString = window.location.search;
 	const urlParams = new URLSearchParams(queryString);
-	const notes = urlParams.get('note').split(",");
+	const notes = urlParams.get('note')
+
+	if(notes) 
+		notes=notes.split(",");
 
 	for(var i = 0; i < notes.length; i++){
 		if(i==1)
@@ -909,7 +912,7 @@ function setEditDivTitlesAppend(){
 
 
 function showCreateAnotherButton(){
-	document.getElementById("createAnother").style="visibility:hidden; display: none";
+	document.getElementById("createAnother").style="visibility:visible; display: block";
 }
 
 
