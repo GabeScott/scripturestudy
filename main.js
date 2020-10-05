@@ -1,4 +1,4 @@
-let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default/noteapi";
+let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default";
 let sessionUsername = "" ;
 let visibleNotes = [];
 
@@ -56,11 +56,103 @@ document.getElementById("ldssToShow").addEventListener("keyup", function(event) 
 
 
 async function initializeWindow(){
+	await checkDBStatus();
 	await loginInitialUser();
 	setNumNotesText();
 	showInitialNote();
 }
 
+
+async function checkDBStatus(){
+	data = JSON.stringify({"action":"test"})
+
+	sendRequest(data).then(function(response){
+		if (response == "True"){
+			document.getElementById("DBStatusLoader").style="visibility:hidden; display:none;"
+			document.getElementById("dynamicDBText").style="visibility:visible; display:block; color:green"
+			document.getElementById("dynamicDBText").innerHTML="UP"
+			document.getElementById("dynamicDBText").onclick=stopDB
+		}
+		else{
+			document.getElementById("DBStatusLoader").style="visibility:hidden; display:none;"
+			document.getElementById("dynamicDBText").style="visibility:visible; display:block; color:red"
+			document.getElementById("dynamicDBText").innerHTML="DOWN"
+			document.getElementById("dynamicDBText").onclick=startDB
+		}
+	})
+}
+
+function startDB(){
+	if(!confirm("Are you sure you want to start the database? It will incur costs"))
+		return;
+
+	document.getElementById("dynamicDBText").style="visibility:hidden; display:none;"
+	startLoader();
+
+
+	data=JSON.stringify({})
+	sendRequest(data=data, method="/start-db").then(function(response){
+		console.log(response);
+	})
+
+	setTimeout(waitForUpStatus, 5000)
+}
+
+function stopDB(){
+	if(!confirm("Are you sure you want to stop the database?"))
+		return;
+
+	document.getElementById("dynamicDBText").style="visibility:hidden; display:none;"
+	startLoader();
+
+	data=JSON.stringify({})
+	sendRequest(data=data, method="/stop-db").then(function(response){
+		console.log(response);
+	})
+
+	setTimeout(waitForDownStatus, 5000)
+}
+
+
+function waitForUpStatus(){
+	data = JSON.stringify({
+		"action":"test"
+	})
+	sendRequest(data=data).then(function(response){
+		if (response == "True"){
+			document.getElementById("DBStatusLoader").style="visibility:hidden; display:none;"
+			document.getElementById("dynamicDBText").style="visibility:visible; display:block; color:green"
+			document.getElementById("dynamicDBText").innerHTML="UP"
+			document.getElementById("dynamicDBText").onclick=stopDB
+		}
+		else{
+			setTimeout(waitForUpStatus, 5000)
+		}
+	})
+}
+
+
+function waitForDownStatus(){
+	data = JSON.stringify({
+		"action":"test"
+	})
+	sendRequest(data=data).then(function(response){
+		if (response == "False"){
+			document.getElementById("DBStatusLoader").style="visibility:hidden; display:none;"
+			document.getElementById("dynamicDBText").style="visibility:visible; display:block; color:red"
+			document.getElementById("dynamicDBText").innerHTML="DOWN"
+			document.getElementById("dynamicDBText").onclick=startDB
+		}
+		else{
+			setTimeout(waitForDownStatus, 5000)
+		}
+	})
+}
+
+
+function startLoader(){
+	document.getElementById("DBStatusLoader").style="visibility:visible; display:block;"
+}
 
 function setNumNotesText(){
 	data =  JSON.stringify({"action":"count"})
@@ -76,10 +168,16 @@ function setNumNotesText(){
 async function showInitialNote(){
 	const queryString = window.location.search;
 	const urlParams = new URLSearchParams(queryString);
-	const notes = urlParams.get('note')
+	var notes = urlParams.get('note')
 
-	if(notes) 
-		notes=notes.split(",");
+	if(notes) {
+		if(notes.includes(","))
+			notes=notes.split(",");
+		else
+			notes=[notes];
+	}
+	else
+		notes = []
 
 	for(var i = 0; i < notes.length; i++){
 		if(i==1)
@@ -720,7 +818,7 @@ function showCreate(){
 	showEditDiv();
 	setEditDivTitles();
 	showPublicPrivateRadioButtons()
-	showCreateAnotherButton();
+	hideCreateAnotherButton();
 	checkPrivateRadioButton();
 }
 
@@ -789,7 +887,7 @@ async function checkUsername(){
 }
 
 
-function sendRequest(data){
+function sendRequest(data, method="/noteapi"){
 	  var xhr = new XMLHttpRequest();
 	  return new Promise(function(resolve, reject) {
 	   xhr.onreadystatechange = function() {
@@ -801,7 +899,7 @@ function sendRequest(data){
 	        }
 	      }
 	    }
-	    xhr.open('POST', apiAddress, true)
+	    xhr.open('POST', apiAddress+method, true)
 	    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 	    xhr.send(data);
 	  });
@@ -896,6 +994,10 @@ function hideCreateAnotherButton(){
 	document.getElementById("createAnother").style="visibility:hidden";
 }
 
+function showCreateAnotherButton(){
+	document.getElementById("createAnother").style="visibility:visible; display: block";
+}
+
 
 function setEditDivTitles(){
 	document.getElementById("bodyEditDiv").innerHTML = "Body";
@@ -908,11 +1010,6 @@ function setEditDivTitlesAppend(){
 	document.getElementById("titleHeader").innerHTML = "Title (you did not create this note, can only append)";
 	document.getElementById("bodyEditDiv").innerHTML = "Body (you did not create this note, can only append)";
 	document.getElementById("tagEditDiv").innerHTML = "Tags (you did not create this note, can only append)";
-}
-
-
-function showCreateAnotherButton(){
-	document.getElementById("createAnother").style="visibility:visible; display: block";
 }
 
 
