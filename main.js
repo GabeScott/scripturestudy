@@ -545,14 +545,21 @@ function createDropDownMenu(match){
 	var ldssverse = allverses.split("-")[0] ?? allverses;
 
 	var ldsslink = book;
+	var paragraph = 0
 
 	if(chapter != '')
 		ldsslink += " " + chapter;
 
-	if(ldssverse != '')
+	if(ldssverse != ''){
 		ldsslink += ":" + ldssverse;
+		paragraph = ldssverse-1;
+	}
+
+
+
+
 	
-	url = "https://www.churchofjesuschrist.org"+bookDict[book]+chapter+"."+allverses;
+	url = "https://www.churchofjesuschrist.org"+bookDict[book]+chapter+"."+allverses+"?lang=eng#p"+paragraph;
 	var menu = `</p><div class="dropdown">
 			<a>${scripture}</a>
 		<div class="dropdown-content">
