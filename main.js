@@ -595,7 +595,7 @@ function showCommentaryForScripture(element){
 function scrollToItem(item) {
     var diff=(item.offsetTop-window.scrollY)/8
     var windowHeight = window.innerHeight;
-    if (Math.abs(diff)>1) {
+    if (Math.abs(Math.floor(diff))>1) {
         window.scrollTo(0, (window.scrollY+diff))
         clearTimeout(window._TO)
         if ((window.innerHeight + window.scrollY) < document.body.scrollHeight){
