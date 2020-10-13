@@ -504,12 +504,18 @@ async function showNote(){
 
 
 function highlightSearchTerms(html){
-	var searchTerm = document.getElementById('searchText').value
+	var searchTerm = document.getElementById('searchText').value;
 
-	html = html.replace(new RegExp(searchTerm, "gi"), 
-		(match) => "<a style='color:yellow'>"+match+"</a>");
+	if (searchTerm.length > 0 && !searchTerm.includes("|") && !searchTerm.includes("<") && !searchTerm.includes(">")){
+		html = html.replace(new RegExp(">[^<]*?"+searchTerm+"[^>]*?<", "gi"), 
+			(match) => highlightAllWordsInMatch(match, searchTerm));
+	}
 
 	return html
+}
+
+function highlightAllWordsInMatch(matchedText, searchTerm){
+	return matchedText.replace(new RegExp(searchTerm, "gi"), (match) => "<span style='color:yellow'>"+match+"</span>");
 }
 
 
