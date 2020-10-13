@@ -989,12 +989,12 @@ function hideEditOptions(){
 
 
 function hideSubmitCreateButton(){
-	document.getElementById("submitCreate").style="visibility:hidden"
+	document.getElementById("submitCreate").style="visibility:hidden; display:none;"
 }
 
 
 function showSubmitCreateButton(){
-	document.getElementById("submitCreate").style="visibility:visible";
+	document.getElementById("submitCreate").style="visibility:visible; display:block;";
 }
 
 

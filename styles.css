@@ -58,6 +58,14 @@ textarea {
   height:100px;
 }
 
+#submitEdit{
+  float:left;
+}
+
+#submitCreate{
+  float:left;
+}
+
 #commentDiv{
   visibility: hidden;
   margin: 0 0 20px 0;
