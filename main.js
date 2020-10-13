@@ -311,7 +311,7 @@ function searchByTag(text){
 
 
 function getSearchByTagResults(json){
-	var result = 'Results: <br>';
+	var result = json.length + ' Results: <br>';
 	
 	json.sort(function(a,b){
 		if ( a[0] == b[0] ) return 0;
@@ -352,7 +352,7 @@ function searchByText(text){
 
 
 function getSearchByTextResults(json, text){
-	var result = 'Results: <br>';
+	var result = json.length + ' Results: <br>';
 	var resultDict = {};
 	var textDict = {};
 	var titleDict = {};
