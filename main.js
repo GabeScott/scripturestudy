@@ -624,8 +624,9 @@ function removeNote(button){
 
 
 function convertMDToHTML(md){
-	converter = new showdown.Converter({extensions: ['table']});
+	converter = new showdown.Converter();
 	converter.setOption('simpleLineBreaks', true);
+	converter.setOption('tables', true);
 	html = converter.makeHtml(md+"<br><br>");
 	html = addNoteLinks(html);
 	return html;
