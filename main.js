@@ -566,11 +566,11 @@ function createDropDownMenu(match){
 
 	
 	url = "https://www.churchofjesuschrist.org"+bookDict[book]+chapter+"."+allverses+"?lang=eng#p"+paragraph;
-	var menu = `</p><div class="dropdown">
+	var menu = `</p><span class="dropdown">
 			<a>${scripture}</a>
 		<div class="dropdown-content">
 		<a href="#" name="${ldsslink}" onclick="showCommentaryForScripture(this); return false;">Show LDSS</a>
-		<a href="${url}" target="_blank">Go To Scripture</a></div></div><p style="display:inline;">`;
+		<a href="${url}" target="_blank">Go To Scripture</a></div></span><p style="display:inline;">`;
 
 
 
