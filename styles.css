@@ -145,15 +145,25 @@ textarea {
 #usernameDiv{
   display: block;
   height: 5%;
-  width: 60%;
+  width: 50%;
   float:left;
 }
 
 #DBStatusDiv{
   display: block;
   height: 5%;
-  width: 40%;
+  width: 50%;
   float:right;
+}
+
+#SSStatusLoader{
+  margin:auto;
+  float:none;
+  display: none;
+}
+
+#searchScripturesButton{
+  margin: 10px 0px 0px 0px;
 }
 
 #staticDBText{
@@ -300,4 +310,44 @@ tr:nth-child(even) {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+.modal {
+  text-align: center;
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 50px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 60%;
+  height: 95%;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
 }

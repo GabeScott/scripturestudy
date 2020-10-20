@@ -7,13 +7,47 @@
 		<title id='title'>Scripture Notes</title>
 	</head>
 	<body>
+		<div id="myModal" class="modal">
+
+		  <!-- Modal content -->
+		  <div class="modal-content">
+		    <span class="close">&times;</span>
+		    <h2 style = "text-align: center">Simple Search</h2>
+		    <p>Where to search...</p>
+		    <input type="checkbox" id="OT" name="OT" value="OT">
+			<label for="OT">OT</label>
+			<input type="checkbox" id="NT" name="NT" value="NT">
+			<label for="NT">NT</label>
+			<input type="checkbox" id="BOM" name="BOM" value="BOM">
+			<label for="BOM">BoM</label>
+			<input type="checkbox" id="D&C" name="D&C" value="D&C">
+			<label for="D&C">D&C</label>
+			<input type="checkbox" id="POGP" name="PoGP" value="PoGP">
+			<label for="POGP">PoGP</label><br><br>
+			<p>Search Terms: (Separate multiple by commas)</p>
+		    <input id="simpleSearchTerms" type="text" style="width:50%; display: block; margin:auto;"></input>
+		    <br>
+		    <button onclick="simpleSearch()" style="display: block; width:10%; margin: auto;">Search</button>
+		    <br><br>
+		    <div class="loader" id="SSStatusLoader"></div>
+		    <div id = "simpleSearchResults" style = "display: none;">
+			    <h3>Results:</h3>
+			    <div class="noteArea" id="simpleSearchTextarea" style="height:450px; text-align: left;"></div>
+			</div>
+		  </div>
+
+		</div>
+
+
 		<div id="usernameDiv">
 			<p id="username">Enter Username:</p>
 			<input id = "usernameInput" type="text" style="">
 			<button id="usernameButton" onclick="checkUsername()">Enter</button>
 			<p id="goodUser"></p>
 		</div>
+
 		<div id="DBStatusDiv">
+			<button id="searchScripturesButton" onclick="openScriptureSearchMenu()">Search Scriptures</button>
 			<div class="loader" id="DBStatusLoader"></div>
 			<a href="#" id="dynamicDBText">UP</a>
 			<p id="staticDBText">Database is: </p>

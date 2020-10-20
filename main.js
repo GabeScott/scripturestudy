@@ -2,6 +2,7 @@ let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default
 let sessionUsername = "" ;
 let visibleNotes = [];
 
+
 initializeWindow();
 
 document.getElementById("searchText").addEventListener("keyup", function(event) {
@@ -53,6 +54,112 @@ document.getElementById("ldssToShow").addEventListener("keyup", function(event) 
     document.getElementById("showLdss").click();
   }
 });
+
+document.getElementById("simpleSearchTerms").addEventListener("keyup", function(event) {
+  // Number 13 is the "Enter" key on the keyboard
+  if (event.keyCode === 13) {
+    // Cancel the default action, if needed
+    event.preventDefault();
+    // Trigger the button element with a click
+    simpleSearch();
+  }
+});
+
+
+function openScriptureSearchMenu(){
+	document.getElementById("myModal").style.display="block"
+
+	window.onclick = function(event) {
+	  if (event.target == document.getElementById("myModal")) {
+	    document.getElementById("myModal").style.display = "none";
+	  }
+	}
+
+	document.getElementsByClassName("close")[0].onclick = function() {
+	  document.getElementById("myModal").style.display = "none";
+	}
+
+}
+
+
+function simpleSearch(){
+	showSSLoader();
+	const searchTerms = document.getElementById("simpleSearchTerms").value.split(", ")
+	const booksToSearch = getBooksToSearch()
+	method = '/simplesearch';
+	data = JSON.stringify({"searchTerms":searchTerms, "booksToSearch":booksToSearch});
+
+	sendRequest(data=data, method=method).then(function(response){
+		response = atob(response);
+		updateSimpleSearchResults(parseSimpleSearchResults(JSON.parse(response)));
+		formatSimpleSearchResults(searchTerms);
+		hideSSLoader();
+	})
+}
+
+function showSSLoader(){
+	document.getElementById("SSStatusLoader").style.display = "block";
+}
+
+function hideSSLoader(){
+	document.getElementById("SSStatusLoader").style.display = "none";
+}
+
+
+function getBooksToSearch(){
+	var booksToSearch = []
+	if(document.getElementById("OT").checked)
+		booksToSearch.push("OT");
+
+	if(document.getElementById("NT").checked)
+		booksToSearch.push("NT");
+
+	if(document.getElementById("BOM").checked)
+		booksToSearch.push("BOM");
+
+	if(document.getElementById("D&C").checked)
+		booksToSearch.push("D&C");
+
+	if(document.getElementById("POGP").checked)
+		booksToSearch.push("POGP");
+
+	return booksToSearch;
+
+}
+
+
+function parseSimpleSearchResults(json){
+	const hits = json['hits'];
+	delete json['hits'];
+
+	var text = 'Hits: ' + hits + "<br><br>";
+	var refs = Object.keys(json);
+
+	for(var i = 0; i < refs.length; i++){
+		text += refs[i] + " - " + json[refs[i]] + "<br><br>";
+	}
+
+	return text;
+}
+
+
+function formatSimpleSearchResults(searchTerms){
+	var text = document.getElementById("simpleSearchTextarea").innerHTML;
+	for(var i = 0; i < searchTerms.length; i++){
+		var color ='#'+Math.random().toString(16).substr(2,6)
+		text = text.replace(new RegExp(searchTerms[i], 'gi'), 
+			(match) => "<span style='color:"+color+"'>"+match+"</span>")
+	}
+	
+	document.getElementById("simpleSearchTextarea").innerHTML = text;
+}
+
+
+
+function updateSimpleSearchResults(response){
+	document.getElementById("simpleSearchResults").style.display="block";
+	document.getElementById("simpleSearchTextarea").innerHTML = response
+}
 
 
 async function initializeWindow(){
