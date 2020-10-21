@@ -159,6 +159,32 @@ textarea {
 #SSStatusLoader{
   margin:auto;
   float:none;
+  display: block;
+  visibility: hidden;
+}
+
+#simpleSearchTextarea{
+  height:450px; 
+  text-align: left;
+}
+
+#simpleSearchButton{
+  display: block;
+  width:10%; 
+  margin: auto;
+}
+
+#simpleSearchHeader{
+  text-align: center;
+}
+
+#simpleSearchTerms{
+  width:50%; 
+  display: block; 
+  margin:auto;
+}
+
+#simpleSearchResults{
   display: none;
 }
 

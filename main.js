@@ -1,6 +1,8 @@
 let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default";
 let sessionUsername = "" ;
 let visibleNotes = [];
+let simpleSearchCurrentLen = 0
+let simplesearchColors = []
 
 
 initializeWindow();
@@ -83,14 +85,16 @@ function openScriptureSearchMenu(){
 
 
 function simpleSearch(){
+	document.getElementById("simpleSearchTextarea").scrollTop = 0;
+	simpleSearchCurrentLen = 0;
 	showSSLoader();
 	const searchTerms = document.getElementById("simpleSearchTerms").value.split(", ")
 	const booksToSearch = getBooksToSearch()
 	method = '/simplesearch';
-	data = JSON.stringify({"searchTerms":searchTerms, "booksToSearch":booksToSearch});
+	data = JSON.stringify({"searchTerms":searchTerms, "booksToSearch":booksToSearch,
+							"startingPoint":simpleSearchCurrentLen, "responseSize":100});
 
 	sendRequest(data=data, method=method).then(function(response){
-		response = atob(response);
 		updateSimpleSearchResults(parseSimpleSearchResults(JSON.parse(response)));
 		formatSimpleSearchResults(searchTerms);
 		hideSSLoader();
@@ -98,11 +102,11 @@ function simpleSearch(){
 }
 
 function showSSLoader(){
-	document.getElementById("SSStatusLoader").style.display = "block";
+	document.getElementById("SSStatusLoader").style.visibility = "visible";
 }
 
 function hideSSLoader(){
-	document.getElementById("SSStatusLoader").style.display = "none";
+	document.getElementById("SSStatusLoader").style.visibility = "hidden";
 }
 
 
@@ -128,11 +132,13 @@ function getBooksToSearch(){
 }
 
 
-function parseSimpleSearchResults(json){
+function parseSimpleSearchResults(json, isStart = true){
 	const hits = json['hits'];
 	delete json['hits'];
 
-	var text = 'Hits: ' + hits + "<br><br>";
+	var text = ''
+	if(isStart)
+		text += 'Hits: ' + hits + " <br><br> ";
 	var refs = Object.keys(json);
 
 	for(var i = 0; i < refs.length; i++){
@@ -143,12 +149,23 @@ function parseSimpleSearchResults(json){
 }
 
 
-function formatSimpleSearchResults(searchTerms){
+function formatSimpleSearchResults(searchTerms, isStart = true){
+	if(isStart)
+		simplesearchColors = [];
+
 	var text = document.getElementById("simpleSearchTextarea").innerHTML;
+	
 	for(var i = 0; i < searchTerms.length; i++){
-		var color ='#'+Math.random().toString(16).substr(2,6)
+		var color = ''
+		if(isStart){
+			color = '#'+Math.random().toString(16).substr(2,6);
+			simplesearchColors.push(color);
+		} else {
+			color = simplesearchColors[i];
+		}
+		
 		text = text.replace(new RegExp(searchTerms[i], 'gi'), 
-			(match) => "<span style='color:"+color+"'>"+match+"</span>")
+			(match) => "<span style='color:"+color+"'>"+match+"</span>");
 	}
 	
 	document.getElementById("simpleSearchTextarea").innerHTML = text;
@@ -159,6 +176,31 @@ function formatSimpleSearchResults(searchTerms){
 function updateSimpleSearchResults(response){
 	document.getElementById("simpleSearchResults").style.display="block";
 	document.getElementById("simpleSearchTextarea").innerHTML = response
+}
+
+
+function getMoreSimpleSearchResults(){
+	ssdiv = document.getElementById('simpleSearchTextarea');
+	if(ssdiv.scrollTop === (ssdiv.scrollHeight - ssdiv.offsetHeight)){
+		showSSLoader();
+
+		simpleSearchCurrentLen += 100;
+		const searchTerms = document.getElementById("simpleSearchTerms").value.split(", ");
+		const booksToSearch = getBooksToSearch();
+		method = '/simplesearch';
+		data = JSON.stringify({"searchTerms":searchTerms, "booksToSearch":booksToSearch,
+								"startingPoint":simpleSearchCurrentLen, "responseSize":100});
+
+		sendRequest(data=data, method=method).then(function(response){
+			appendSimpleSearchResults(parseSimpleSearchResults(JSON.parse(response), false));
+			formatSimpleSearchResults(searchTerms, false);
+			hideSSLoader();
+		})
+	}
+}
+
+function appendSimpleSearchResults(text){
+	document.getElementById("simpleSearchTextarea").innerHTML += text;
 }
 
 

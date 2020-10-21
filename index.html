@@ -12,7 +12,7 @@
 		  <!-- Modal content -->
 		  <div class="modal-content">
 		    <span class="close">&times;</span>
-		    <h2 style = "text-align: center">Simple Search</h2>
+		    <h2 id = "simpleSearchHeader">Simple Search</h2>
 		    <p>Where to search...</p>
 		    <input type="checkbox" id="OT" name="OT" value="OT">
 			<label for="OT">OT</label>
@@ -25,14 +25,14 @@
 			<input type="checkbox" id="POGP" name="PoGP" value="PoGP">
 			<label for="POGP">PoGP</label><br><br>
 			<p>Search Terms: (Separate multiple by commas)</p>
-		    <input id="simpleSearchTerms" type="text" style="width:50%; display: block; margin:auto;"></input>
+		    <input id="simpleSearchTerms" type="text"></input>
 		    <br>
-		    <button onclick="simpleSearch()" style="display: block; width:10%; margin: auto;">Search</button>
+		    <button id='simpleSearchButton' onclick="simpleSearch()">Search</button>
 		    <br><br>
 		    <div class="loader" id="SSStatusLoader"></div>
-		    <div id = "simpleSearchResults" style = "display: none;">
+		    <div id = "simpleSearchResults">
 			    <h3>Results:</h3>
-			    <div class="noteArea" id="simpleSearchTextarea" style="height:450px; text-align: left;"></div>
+			    <div class="noteArea" id="simpleSearchTextarea" onscroll="getMoreSimpleSearchResults()"></div>
 			</div>
 		  </div>
 
