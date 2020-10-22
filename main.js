@@ -739,8 +739,19 @@ function fixInlineParagraphs(){
 
 function showCommentaryForScripture(element){
 	document.getElementsByClassName("close")[0].click()
-	document.getElementById("ldssToShow").value = element.name;
+	var value = fixOD(element.name);
+	document.getElementById("ldssToShow").value = value;
+
 	showLdss();
+}
+
+
+function fixOD(value){
+	if(value.includes("Official Declaration 1"))
+		return "Official Declaration 1";
+	if(value.includes("Official Declaration 2"))
+		return "Official Declaration 2";
+	return value;
 }
 
 
