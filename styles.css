@@ -164,13 +164,13 @@ textarea {
 }
 
 #simpleSearchTextarea{
-  height:450px; 
+  height:50%; 
   text-align: left;
 }
 
 #simpleSearchButton{
   display: block;
-  width:10%; 
+  width: fit-content; 
   margin: auto;
 }
 
@@ -186,6 +186,7 @@ textarea {
 
 #simpleSearchResults{
   display: none;
+  height: 100%;
 }
 
 #searchScripturesButton{
