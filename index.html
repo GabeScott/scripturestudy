@@ -35,23 +35,22 @@
 			    <div class="noteArea" id="simpleSearchTextarea" onscroll="getMoreSimpleSearchResults()"></div>
 			</div>
 		  </div>
-
 		</div>
 
+		<div id="headerDiv">
+			<div id="usernameDiv">
+				<p id="username">Enter Username:</p>
+				<input id = "usernameInput" type="text" style="">
+				<button id="usernameButton" onclick="checkUsername()">Enter</button>
+				<p id="goodUser"></p>
+			</div>
 
-		<div id="usernameDiv">
-			<p id="username">Enter Username:</p>
-			<input id = "usernameInput" type="text" style="">
-			<button id="usernameButton" onclick="checkUsername()">Enter</button>
-			<p id="goodUser"></p>
-		</div>
-
-		<div id="DBStatusDiv">
-			<button id="searchScripturesButton" onclick="openScriptureSearchMenu()">Search Scriptures</button>
-			<div class="loader" id="DBStatusLoader"></div>
-			<a href="#" id="dynamicDBText">UP</a>
-			<p id="staticDBText">Database is: </p>
-
+			<div id="DBStatusDiv">
+				<button id="searchScripturesButton" onclick="openScriptureSearchMenu()">Search Scriptures</button>
+				<div class="loader" id="DBStatusLoader"></div>
+				<a href="#" id="dynamicDBText">UP</a>
+				<p id="staticDBText">Database is: </p>
+			</div>
 		</div>
 		<div class="row">
 		  <div class="column" style="background-color:#bbb;" id='searchColumn'>

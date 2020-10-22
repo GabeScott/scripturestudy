@@ -62,6 +62,12 @@ textarea {
   float:left;
 }
 
+#headerDiv{
+  display: flex;
+  visibility: visible;
+  margin-bottom: 10px;
+}
+
 #submitCreate{
   float:left;
 }
