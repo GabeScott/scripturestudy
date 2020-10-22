@@ -175,7 +175,7 @@ function formatSimpleSearchResults(searchTerms, isStart = true){
 
 function updateSimpleSearchResults(response){
 	document.getElementById("simpleSearchResults").style.display="block";
-	document.getElementById("simpleSearchTextarea").innerHTML = response
+	document.getElementById("simpleSearchTextarea").innerHTML = addBookLinks(response);
 }
 
 
@@ -200,7 +200,7 @@ function getMoreSimpleSearchResults(){
 }
 
 function appendSimpleSearchResults(text){
-	document.getElementById("simpleSearchTextarea").innerHTML += text;
+	document.getElementById("simpleSearchTextarea").innerHTML += addBookLinks(text);
 }
 
 
@@ -710,10 +710,6 @@ function createDropDownMenu(match){
 		paragraph = ldssverse-1;
 	}
 
-
-
-
-	
 	url = "https://www.churchofjesuschrist.org"+bookDict[book]+chapter+"."+allverses+"?lang=eng#p"+paragraph;
 	var menu = `</p><span class="dropdown">
 			<a>${scripture}</a>
@@ -742,6 +738,7 @@ function fixInlineParagraphs(){
 
 
 function showCommentaryForScripture(element){
+	document.getElementsByClassName("close")[0].click()
 	document.getElementById("ldssToShow").value = element.name;
 	showLdss();
 }
