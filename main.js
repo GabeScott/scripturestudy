@@ -3,6 +3,7 @@ let sessionUsername = "" ;
 let visibleNotes = [];
 let simpleSearchCurrentLen = 0
 let simplesearchColors = []
+let dbHost = ''
 
 
 initializeWindow();
@@ -216,17 +217,18 @@ async function checkDBStatus(){
 	data = JSON.stringify({"action":"test"})
 
 	sendRequest(data).then(function(response){
-		if (response == "True"){
-			document.getElementById("DBStatusLoader").style="visibility:hidden; display:none;"
-			document.getElementById("dynamicDBText").style="visibility:visible; display:block; color:green"
-			document.getElementById("dynamicDBText").innerHTML="UP"
-			document.getElementById("dynamicDBText").onclick=stopDB
+		if (response != "False"){
+			document.getElementById("DBStatusLoader").style="visibility:hidden; display:none;";
+			document.getElementById("dynamicDBText").style="visibility:visible; display:block; color:green";
+			document.getElementById("dynamicDBText").innerHTML="UP";
+			document.getElementById("dynamicDBText").onclick=stopDB;
+			dbHost = response;
 		}
 		else{
-			document.getElementById("DBStatusLoader").style="visibility:hidden; display:none;"
-			document.getElementById("dynamicDBText").style="visibility:visible; display:block; color:red"
-			document.getElementById("dynamicDBText").innerHTML="DOWN"
-			document.getElementById("dynamicDBText").onclick=startDB
+			document.getElementById("DBStatusLoader").style="visibility:hidden; display:none;";
+			document.getElementById("dynamicDBText").style="visibility:visible; display:block; color:red";
+			document.getElementById("dynamicDBText").innerHTML="DOWN";
+			document.getElementById("dynamicDBText").onclick=startDB;
 		}
 	})
 }
@@ -268,11 +270,12 @@ function waitForUpStatus(){
 		"action":"test"
 	})
 	sendRequest(data=data).then(function(response){
-		if (response == "True"){
+		if (response != "False"){
 			document.getElementById("DBStatusLoader").style="visibility:hidden; display:none;"
 			document.getElementById("dynamicDBText").style="visibility:visible; display:block; color:green"
 			document.getElementById("dynamicDBText").innerHTML="UP"
 			document.getElementById("dynamicDBText").onclick=stopDB
+			dbHost = response;
 		}
 		else{
 			setTimeout(waitForUpStatus, 5000)
@@ -1059,6 +1062,9 @@ async function checkUsername(){
 
 
 function sendRequest(data, method="/noteapi"){
+	data = JSON.parse(data);
+	data['dbHost'] = dbHost;
+	data = JSON.stringify(data);
 	  var xhr = new XMLHttpRequest();
 	  return new Promise(function(resolve, reject) {
 	   xhr.onreadystatechange = function() {
