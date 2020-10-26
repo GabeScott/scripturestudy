@@ -216,7 +216,7 @@ async function initializeWindow(){
 async function checkDBStatus(){
 	data = JSON.stringify({"action":"test"})
 
-	sendRequest(data).then(function(response){
+	await sendRequest(data).then(function(response){
 		if (response != "False"){
 			document.getElementById("DBStatusLoader").style="visibility:hidden; display:none;";
 			document.getElementById("dynamicDBText").style="visibility:visible; display:block; color:green";
