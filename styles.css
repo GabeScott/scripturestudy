@@ -16,6 +16,14 @@ html, body {
   height: 100%;
 }
 
+.ldssButton{
+  width:85px;
+}
+
+.ldssButtonDiv{
+  padding-top: 5px;
+}
+
 .expandedColumn{
   width:100%;
   display:block;

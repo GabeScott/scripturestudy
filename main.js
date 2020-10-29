@@ -384,6 +384,67 @@ function showLdss(){
 }
 
 
+function showNextLdss(){
+	var searchText = document.getElementById("ldssToShow").value;
+	var data = JSON.stringify({"action":"showNextLdss", "searchText":searchText});
+
+	document.getElementById("scripture").innerHTML = searchText
+
+	sendRequest(data).then(function(response){
+
+		if(isJSON(response)){
+			var response = JSON.parse(response);
+		  	showCommentDiv();	
+		  	document.getElementById("ldssArea").innerHTML = response["reference"] + "\n\n"+ response["content"]		
+		  	document.getElementById("ldssCommentArea").innerHTML = response["comments"]			
+		  	document.getElementById("ldssToShow").value = response['reference'];
+		} 
+		else {
+			hideCommentDiv();
+			document.getElementById("ldssArea").innerHTML = response		
+		  	document.getElementById("ldssCommentArea").innerHTML = ""
+		}	
+
+		scrollToItem(document.getElementById("ldssArea"));
+
+		
+	}, function(rej){
+		console.log(rej);
+	})
+}
+
+
+function showPrevLdss(){
+	var searchText = document.getElementById("ldssToShow").value;
+
+	var data = JSON.stringify({"action":"showPrevLdss", "searchText":searchText});
+
+	document.getElementById("scripture").innerHTML = searchText
+
+	sendRequest(data).then(function(response){
+
+		if(isJSON(response)){
+			var response = JSON.parse(response);
+		  	showCommentDiv();	
+		  	document.getElementById("ldssArea").innerHTML = response["reference"] + "\n\n"+ response["content"];		
+		  	document.getElementById("ldssCommentArea").innerHTML = response["comments"];			
+		  	document.getElementById("ldssToShow").value = response['reference'];
+		} 
+		else {
+			hideCommentDiv();
+			document.getElementById("ldssArea").innerHTML = response;
+		  	document.getElementById("ldssCommentArea").innerHTML = "";
+		}	
+
+		scrollToItem(document.getElementById("ldssArea"));
+
+		
+	}, function(rej){
+		console.log(rej);
+	})
+}
+
+
 function commentOnLdss(){
 	let scripture = document.getElementById("scripture").innerHTML
 	let comment = document.getElementById("ldssComment").value
