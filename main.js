@@ -365,7 +365,7 @@ function showLdss(){
 		if(isJSON(response)){
 			var response = JSON.parse(response);
 		  	showCommentDiv();	
-		  	document.getElementById("ldssArea").innerHTML = response["name"] + "\n\n"+ response["content"]		
+		  	document.getElementById("ldssArea").innerHTML = response["reference"] + "\n\n"+ response["content"]		
 		  	document.getElementById("ldssCommentArea").innerHTML = response["comments"]			
 
 		} 
