@@ -7,7 +7,7 @@
 		<title id='title'>Scripture Notes</title>
 	</head>
 	<body>
-		<div id="myModal" class="modal">
+		<div id="scriptureSearchModal" class="modal">
 
 		  <!-- Modal content -->
 		  <div class="modal-content">
@@ -37,6 +37,23 @@
 		  </div>
 		</div>
 
+		<div id="comeFollowMeModal" class="modal">
+
+		  <!-- Modal content -->
+		  <div class="modal-content">
+		  	<span class="close">&times;</span>
+		  	<h2 id = "comeFollowMeHeader">Come Follow Me</h2>
+			<p>Choose week to review...</p>
+			<input type="date" id="dateSelector">
+			<button id="searchComeFollowMeButton" onclick="searchComeFollowMe()">Go</button>
+			<br>
+			<br>
+			<br>
+			<div id='comeFollowMeResultsDiv'></div>
+		    
+		  </div>
+		</div>
+
 		<div id="headerDiv">
 			<div id="usernameDiv">
 				<p id="username">Enter Username:</p>
@@ -47,6 +64,7 @@
 
 			<div id="DBStatusDiv">
 				<button id="searchScripturesButton" onclick="openScriptureSearchMenu()">Search Scriptures</button>
+				<button id="comeFollowMeButton" onclick="openComeFollowMeMenu()">Come Follow Me</button>				
 				<div class="loader" id="DBStatusLoader"></div>
 				<a href="#" id="dynamicDBText">UP</a>
 				<p id="staticDBText">Database is: </p>

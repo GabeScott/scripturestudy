@@ -70,18 +70,155 @@ document.getElementById("simpleSearchTerms").addEventListener("keyup", function(
 
 
 function openScriptureSearchMenu(){
-	document.getElementById("myModal").style.display="block"
+	document.getElementById("scriptureSearchModal").style.display="block"
 
 	window.onclick = function(event) {
-	  if (event.target == document.getElementById("myModal")) {
-	    document.getElementById("myModal").style.display = "none";
+	  if (event.target == document.getElementById("scriptureSearchModal")) {
+	    document.getElementById("scriptureSearchModal").style.display = "none";
 	  }
 	}
 
 	document.getElementsByClassName("close")[0].onclick = function() {
-	  document.getElementById("myModal").style.display = "none";
+	  document.getElementById("scriptureSearchModal").style.display = "none";
 	}
 
+}
+
+
+function openComeFollowMeMenu(){
+	// 
+	document.getElementById("comeFollowMeModal").style.display="block"
+
+	window.onclick = function(event) {
+	  if (event.target == document.getElementById("comeFollowMeModal")) {
+	    document.getElementById("comeFollowMeModal").style.display = "none";
+	  }
+	}
+
+	document.getElementsByClassName("close")[1].onclick = function() {
+	  document.getElementById("comeFollowMeModal").style.display = "none";
+	}
+
+}
+
+
+function searchComeFollowMe(){
+	date = document.getElementById("dateSelector").value;
+	var weekDays = getWeekRange(date);
+
+	data = JSON.stringify({"week":weekDays, "action":"searchcfm", "user":sessionUsername});
+	console.log(weekDays)
+
+	
+	sendRequest(data=data).then(function(response){
+		response = JSON.parse(response)
+
+
+
+		outputHTML = ''
+		for(var i=0;i<response.length;i++){
+			maxLen = response[i]["body"].length < 300 ? response[i]["body"].length : 300;	
+			partialBody = response[i]["body"].substring(0,maxLen)
+
+
+			outputHTML += '<div class="card" id="'+response[i]["id"]+'"> <div class="container"> <div>'+
+			convertMDToHTML(response[i]["id"] + "\n## " + response[i]["title"] + '\n\n' +
+			partialBody + '...') + '</div>' +
+			'</div></div>';
+		}
+
+		document.getElementById("comeFollowMeResultsDiv").innerHTML = addBookLinks(outputHTML);
+
+		for(var i=0;i<response.length;i++){
+			document.getElementsByClassName("card")[i].onclick = function(event){
+				cardClick(this, event)
+			}
+		}
+		fixInlineParagraphs();
+	}, function(rej){
+		console.log(rej);
+	})
+
+}
+
+
+async function cardClick(element, event){
+	console.log(event.path[0])
+
+	if (event.path[0].tagName.toLowerCase() == 'a')
+		return;
+
+	element.innerHTML = '';
+	element.classList.add('card-full');
+	element.classList.remove('card');
+
+	len = document.getElementsByClassName("card").length
+
+	for(var i=0;i<len;i++){
+		document.getElementsByClassName("card")[i].style = 'visibility:hidden; display:none;'
+	}
+
+	await getFullCard(element.id);
+
+
+	document.getElementById('comeFollowMeResultsDiv').style.overflow = 'hidden';
+	element.onclick = function(){
+		element.innerHTML = '';
+		searchComeFollowMe()
+		document.getElementById('comeFollowMeResultsDiv').style.overflow = 'scroll';
+		element.classList.remove('card-full');
+		element.classList.add('card');
+	}
+}
+
+
+async function getFullCard(id){
+	var data = JSON.stringify({"id": id, "user": sessionUsername, "action":"searchById"});
+
+	await sendRequest(data=data).then(function(response){
+		json = JSON.parse(response)
+
+		var html = convertMDToHTML(json["body"] + "\n");
+				html = addBookLinks(html);
+				var tagText = convertTagsToHTML(json["tags"].split(", "));
+				var title = convertMDToHTML("# "+json["title"]);
+				var owner = json['owner'];
+				var idAndOwner = convertMDToHTML(id +"  (" + owner + ")")
+
+				noteHTML = idAndOwner + "\n\n"+ title + "\n" + html + "\n\nTags: " + tagText;
+
+				element = document.getElementById(id)
+				element.innerHTML =  noteHTML;
+	})
+}
+
+
+function getWeekRange(d) {
+    d = new Date(d);
+    var day = d.getUTCDay(),
+        diff = d.getUTCDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
+    var start = new Date(d.setUTCDate(diff));
+
+    dateRange = []
+
+    for(var i =0; i < 7; i++){
+    	dateRange[i] = formatDate(start.getUTCFullYear().toString(),(start.getUTCMonth()+1)+"",start.getUTCDate().toString());
+    	start.setUTCDate(start.getUTCDate()+1);
+    }
+    return dateRange;
+
+}
+
+
+function formatDate(year, month, day){
+	var formattedDate = year;
+
+	if (month.length == 1)
+		month = '0'+month;
+	if (day.length == 1)
+		day = '0'+day;
+
+	return formattedDate+month+day;
 }
 
 
@@ -210,6 +347,8 @@ async function initializeWindow(){
 	await loginInitialUser();
 	setNumNotesText();
 	showInitialNote();
+
+	document.getElementById('dateSelector').valueAsDate = new Date();
 }
 
 
@@ -634,6 +773,9 @@ function showTagFromSearchResults(element){
 
 
 function showNoteFromSearchResults(element){
+	console.log("showNoteFromSearchResults")
+	document.getElementsByClassName("close")[0].click()
+	document.getElementsByClassName("close")[1].click()
 	if (window.event.ctrlKey) {
         controlClickEdit(element)
         return;
@@ -648,6 +790,8 @@ function showNoteFromSearchResults(element){
 
 
 function controlClickEdit(element){
+	document.getElementsByClassName("close")[0].click()
+	document.getElementsByClassName("close")[1].click()
 	var id = element.innerHTML;
 	document.getElementById("idToEdit").value = id;
 	hideSubmitCreateButton();
@@ -803,6 +947,7 @@ function fixInlineParagraphs(){
 
 function showCommentaryForScripture(element){
 	document.getElementsByClassName("close")[0].click()
+	document.getElementsByClassName("close")[1].click()
 	var value = fixOD(element.name);
 	document.getElementById("ldssToShow").value = value;
 
