@@ -1254,7 +1254,7 @@ async function checkUsername(){
 		if(response == "true"){
 			sessionUsername = username.toLowerCase();
 			document.getElementById("usernameInput").setAttribute('readonly', true);
-			document.getElementById("goodUser").innerHTML = "Successfully logged in as user '" + sessionUsername + "'"
+			document.getElementById("goodUser").innerHTML = "Log in successful"
 		}
 		else{
 			alert("Username not found. Please try again.");
