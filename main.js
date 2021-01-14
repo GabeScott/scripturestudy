@@ -344,9 +344,12 @@ function appendSimpleSearchResults(text){
 
 async function initializeWindow(){
 	await checkDBStatus();
-	await loginInitialUser();
-	setNumNotesText();
-	showInitialNote();
+
+	if(document.getElementById("dynamicDBText").innerHTML == "UP"){
+		await loginInitialUser();
+		setNumNotesText();
+		showInitialNote();
+	}
 
 	document.getElementById('dateSelector').valueAsDate = new Date();
 }
