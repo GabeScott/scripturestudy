@@ -1065,7 +1065,10 @@ async function editNote(){
 		  		titleEditAreaText = json["title"];
 		  		setEditDivTitles();
 		  		showPublicPrivateRadioButtons();
-		  		document.getElementById("create_radio").checked=(owner == 'public');
+		  		if (owner == 'public')
+			  		document.getElementById("create_radio").checked=true;
+			  	else
+			  		document.getElementById("privateRadio").checked=true;
 		  	}
 		  	else if(permissions == 'a'){
 		  		setEditDivTitlesAppend();
