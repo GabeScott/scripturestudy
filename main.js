@@ -189,6 +189,8 @@ async function getFullCard(id){
 
 				element = document.getElementById(id)
 				element.innerHTML =  noteHTML;
+
+		fixInlineParagraphs();
 	})
 }
 
