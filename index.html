@@ -54,6 +54,28 @@
 		  </div>
 		</div>
 
+		<div id="searchLDSSModal" class="modal">
+
+		  <!-- Modal content -->
+		  <div class="modal-content">
+		  	<span class="close">&times;</span>
+		  	<h2 id = "searchLDSSHeader">Search Commentary</h2>
+			<p>Search Terms: (Separate multiple by commas)</p>
+		    <input id="ldssSearchTerms" type="text"></input>
+		    <br>
+		    <button id='ldssSearchButton' onclick="ldssSearch()">Search</button>
+		    <br><br>
+		    <div class="loader" id="LDSSStatusLoader"></div>
+		    <div id = "ldssSearchResults">
+			    <h3>Results:</h3>
+			    <div class="noteArea" id="ldssSearchTextarea" onscroll="getMoreldssSearchResults()"></div>
+			</div>
+		    
+		  </div>
+		</div>
+
+
+
 		<div id="headerDiv">
 			<div id="usernameDiv">
 				<p id="username">Enter Username:</p>
@@ -64,7 +86,8 @@
 
 			<div id="DBStatusDiv">
 				<button id="searchScripturesButton" onclick="openScriptureSearchMenu()">Search Scriptures</button>
-				<button id="comeFollowMeButton" onclick="openComeFollowMeMenu()">Come Follow Me</button>				
+				<button id="comeFollowMeButton" onclick="openComeFollowMeMenu()">Come Follow Me</button>	
+				<button id="ldssSearchButton" onclick="openLDSSSearchMenu()">Search Commentary</button>				
 				<div class="loader" id="DBStatusLoader"></div>
 				<a href="#" id="dynamicDBText">UP</a>
 				<p id="staticDBText">Database is: </p>

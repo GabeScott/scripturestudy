@@ -175,7 +175,7 @@ textarea {
   float:right;
 }
 
-#SSStatusLoader{
+#SSStatusLoader, #LDSSStatusLoader{
   margin:auto;
   float:none;
   display: block;
@@ -183,8 +183,17 @@ textarea {
 }
 
 #simpleSearchTextarea{
-  height:50%; 
+  height:70%; 
   text-align: left;
+}
+
+#ldssSearchTextarea{
+  height:70%; 
+  text-align: left;
+}
+
+#ldssSearchTextarea p{
+  white-space: pre-wrap;
 }
 
 #simpleSearchButton{
@@ -193,22 +202,22 @@ textarea {
   margin: auto;
 }
 
-#simpleSearchHeader{
+#simpleSearchHeader, #searchLDSSHeader{
   text-align: center;
 }
 
-#simpleSearchTerms{
+#simpleSearchTerms, #ldssSearchTerms{
   width:50%; 
   display: block; 
   margin:auto;
 }
 
-#simpleSearchResults{
+#simpleSearchResults, #ldssSearchResults{
   display: none;
   height: 100%;
 }
 
-#searchScripturesButton{
+#searchScripturesButton, #comeFollowMeButton{
   margin: 10px 75px 0px 0px;
 }
 

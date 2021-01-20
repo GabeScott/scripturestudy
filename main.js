@@ -1,9 +1,12 @@
 let apiAddress = "https://0vfs3p8qyj.execute-api.us-east-1.amazonaws.com/default";
 let sessionUsername = "" ;
 let visibleNotes = [];
+let ldssSearchCurrentLen = 0
 let simpleSearchCurrentLen = 0
 let simplesearchColors = []
 let dbHost = ''
+let ldssOverflow={}
+let ldssTerms = []
 
 
 initializeWindow();
@@ -58,6 +61,16 @@ document.getElementById("ldssToShow").addEventListener("keyup", function(event) 
   }
 });
 
+document.getElementById("ldssSearchTerms").addEventListener("keyup", function(event) {
+  // Number 13 is the "Enter" key on the keyboard
+  if (event.keyCode === 13) {
+    // Cancel the default action, if needed
+    event.preventDefault();
+    // Trigger the button element with a click
+    document.getElementById("ldssSearchButton").click();
+  }
+});
+
 document.getElementById("simpleSearchTerms").addEventListener("keyup", function(event) {
   // Number 13 is the "Enter" key on the keyboard
   if (event.keyCode === 13) {
@@ -67,6 +80,179 @@ document.getElementById("simpleSearchTerms").addEventListener("keyup", function(
     simpleSearch();
   }
 });
+
+
+function openLDSSSearchMenu(){
+	document.getElementById("searchLDSSModal").style.display="block"
+
+	window.onclick = function(event) {
+	  if (event.target == document.getElementById("searchLDSSModal")) {
+	    document.getElementById("searchLDSSModal").style.display = "none";
+	  }
+	}
+
+	document.getElementsByClassName("close")[2].onclick = function() {
+	  document.getElementById("searchLDSSModal").style.display = "none";
+	}
+}
+
+
+function ldssSearch(){
+	document.getElementById("ldssSearchTextarea").scrollTop = 0;
+	ldssSearchCurrentLen = 0;
+
+
+	if(document.getElementById("ldssSearchTerms").value.trim() == ''){
+		alert("Please enter a search term")
+		return;
+	}
+
+	showLDSSLoader();
+	const searchTerms = document.getElementById("ldssSearchTerms").value.split(", ")
+
+	
+
+	ldssTerms = searchTerms;
+	ldssOverflow = {}
+
+	data = JSON.stringify({"searchTerms":searchTerms, "action":"searchldss",
+							"startingPoint":ldssSearchCurrentLen, "responseSize":20});
+
+	sendRequest(data=data).then(function(response){
+		updateLDSSeSearchResults(parseLDSSSearchResults(JSON.parse(response)));
+		formatLDSSSearchResults(searchTerms);
+		hideLDSSLoader();
+	})
+}
+
+function showLDSSLoader(){
+	document.getElementById("LDSSStatusLoader").style.visibility = "visible";
+}
+
+function hideLDSSLoader(){
+	document.getElementById("LDSSStatusLoader").style.visibility = "hidden";
+}
+
+
+function formatLDSSSearchResults(searchTerms, isStart = true){
+	if(isStart)
+		simplesearchColors = [];
+
+	var text = document.getElementById("ldssSearchTextarea").innerHTML//.replace(new RegExp("<.*>", 'gi'), (match) => "");
+
+	
+	for(var i = 0; i < searchTerms.length; i++){
+		var color = ''
+		if(isStart){
+			color = '#'+Math.random().toString(16).substr(2,6);
+			simplesearchColors.push(color);
+		} else {
+			color = simplesearchColors[i];
+		}
+		
+		text = text.replace(new RegExp('-id="'+searchTerms[i], 'gi'), 
+			(match) => "<span style='color:"+color+"'>"+match+"</span>");
+	}
+	
+	document.getElementById("ldssSearchTextarea").innerHTML = text;
+}
+
+
+function parseLDSSSearchResults(json, isStart = true){
+	const hits = json['hits'];
+	delete json['hits'];
+
+	var text = ''
+	if(isStart)
+		text += 'Hits: ' + hits + " <br><br> ";
+	var refs = Object.keys(json);
+
+	for(var i = 0; i < refs.length; i++){
+		ref = addBookLinks(refs[i])
+		var addEndingTag = false
+		if(ref == refs[i]){
+			ref = '<span>'+ref+'</span><p style="display: inline;">'
+			addEndingTag = true
+		}
+
+		text += ref + " - " + json[refs[i]].substring(0,100).trim() + '... <a href="#" onclick="seeMoreLdss(this)" id="'+refs[i]+'">More</a><br><br>';
+		ldssOverflow[refs[i]] = json[refs[i]].trim();
+
+		if(addEndingTag){
+			text += '</p>'
+		}
+	}
+
+	return text;
+}
+
+
+function seeMoreLdss(element){
+	fullText = ldssOverflow[element.id]
+
+	for(var i = 0; i < ldssTerms.length; i++){
+		color = simplesearchColors[i];
+		fullText = fullText.replace(new RegExp(ldssTerms[i], 'gi'), 
+			(match) => "<span style='color:"+color+"'>"+match+"</span>");
+	}
+
+	element.parentElement.innerHTML = ' - ' + fullText + '<a href="#" onclick="seeLessLdss(this)" id="'+element.id+'">Less</a><br><br>'
+
+	element.onclick = function(){
+		seeLessLdss(this)
+	}
+
+}
+
+
+function seeLessLdss(element){
+	fullText = ldssOverflow[element.id].substring(0,100)
+
+	for(var i = 0; i < ldssTerms.length; i++){
+		color = simplesearchColors[i];
+		fullText = fullText.replace(new RegExp(ldssTerms[i], 'gi'), 
+			(match) => "<span style='color:"+color+"'>"+match+"</span>");
+	}
+
+	element.parentElement.innerHTML = ' - ' + fullText + '... <a href="#" onclick="seeMoreLdss(this)" id="'+element.id+'">More</a><br><br>'
+
+	element.onclick = function(){
+		seeMoreLdss(this)
+	}
+
+}
+
+
+
+function updateLDSSeSearchResults(response){
+	document.getElementById("ldssSearchResults").style.display="block";
+	document.getElementById("ldssSearchTextarea").innerHTML = response;
+}
+
+
+function getMoreldssSearchResults(){
+	ssdiv = document.getElementById('ldssSearchTextarea');
+	if(ssdiv.scrollTop === (ssdiv.scrollHeight - ssdiv.offsetHeight)){
+		showLDSSLoader();
+
+		ldssSearchCurrentLen += 20;
+		const searchTerms = document.getElementById("ldssSearchTerms").value.split(", ");
+		data = JSON.stringify({"searchTerms":searchTerms, "action":"searchldss",
+								"startingPoint":ldssSearchCurrentLen, "responseSize":20});
+
+		sendRequest(data=data).then(function(response){
+			appendLDSSSearchResults(parseLDSSSearchResults(JSON.parse(response), false));
+			formatLDSSSearchResults(searchTerms, false);
+			hideLDSSLoader();
+		})
+	}
+}
+
+
+function appendLDSSSearchResults(text){
+	document.getElementById("ldssSearchTextarea").innerHTML += text;
+}
+
 
 
 function openScriptureSearchMenu(){
