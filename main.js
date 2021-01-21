@@ -150,7 +150,7 @@ function formatLDSSSearchResults(searchTerms, isStart = true){
 			color = simplesearchColors[i];
 		}
 		
-		text = text.replace(new RegExp('-id="'+searchTerms[i], 'gi'), 
+		text = text.replace(new RegExp('(?<!id=".*)'+searchTerms[i], 'gi'), 
 			(match) => "<span style='color:"+color+"'>"+match+"</span>");
 	}
 	
