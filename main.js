@@ -967,15 +967,17 @@ function showNoteFromSearchResults(element){
 	console.log("showNoteFromSearchResults")
 	document.getElementsByClassName("close")[0].click()
 	document.getElementsByClassName("close")[1].click()
+	tempadd=false;
+
 	if (window.event.ctrlKey) {
         controlClickEdit(element)
         return;
     }
     else if (window.event.shiftKey){
-    	document.getElementById("addNote").checked=true;
+    	tempadd=true;
     }
 	document.getElementById("idToShow").value = element.innerHTML;
-	showNote();
+	showNote(tempadd);
 	resetColumns();
 }
 
@@ -1003,7 +1005,7 @@ function isJSON(text){
 }
 
 
-async function showNote(){
+async function showNote(tempadd=false){
 	id = document.getElementById("idToShow").value.trim();
 
 	var data = JSON.stringify({"id": id, "user": sessionUsername, "action":"searchById"});
@@ -1023,7 +1025,7 @@ async function showNote(){
 					title = highlightSearchTerms(title);
 		  		}
 
-			if(document.getElementById("onlyShowNote").checked || document.getElementById("noteArea").innerHTML == ""){
+			if((document.getElementById("onlyShowNote").checked || document.getElementById("noteArea").innerHTML == "") && !tempadd){
 				visibleNotes = [];
 				var noteHTML = id +" - " + owner + "\n\n"+ title + "\n" + html + "\n\nTags: " + tagText;
 				document.getElementById("noteArea").innerHTML = noteHTML
