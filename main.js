@@ -728,6 +728,7 @@ function showNextLdss(){
 		  	document.getElementById("ldssArea").innerHTML = response["reference"] + "\n\n"+ response["content"]		
 		  	document.getElementById("ldssCommentArea").innerHTML = response["comments"]			
 		  	document.getElementById("ldssToShow").value = response['reference'];
+		  	document.getElementById("scripture").innerHTML = response['reference']
 		} 
 		else {
 			hideCommentDiv();
@@ -759,6 +760,7 @@ function showPrevLdss(){
 		  	document.getElementById("ldssArea").innerHTML = response["reference"] + "\n\n"+ response["content"];		
 		  	document.getElementById("ldssCommentArea").innerHTML = response["comments"];			
 		  	document.getElementById("ldssToShow").value = response['reference'];
+		  	document.getElementById("scripture").innerHTML = response['reference']
 		} 
 		else {
 			hideCommentDiv();
