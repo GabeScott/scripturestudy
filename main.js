@@ -417,8 +417,9 @@ function simpleSearch(){
 	const searchTerms = document.getElementById("simpleSearchTerms").value.split(", ")
 	const booksToSearch = getBooksToSearch()
 	method = '/simplesearch';
+	conditional = document.getElementById("OR").checked ? 'OR' : 'AND'
 	data = JSON.stringify({"searchTerms":searchTerms, "booksToSearch":booksToSearch,
-							"startingPoint":simpleSearchCurrentLen, "responseSize":100});
+							"startingPoint":simpleSearchCurrentLen, "responseSize":100, "conditional":conditional});
 
 	sendRequest(data=data, method=method).then(function(response){
 		updateSimpleSearchResults(parseSimpleSearchResults(JSON.parse(response)));
@@ -514,10 +515,13 @@ function getMoreSimpleSearchResults(){
 		const searchTerms = document.getElementById("simpleSearchTerms").value.split(", ");
 		const booksToSearch = getBooksToSearch();
 		method = '/simplesearch';
+
+		conditional = document.getElementById("OR").checked ? 'OR' : 'AND'
 		data = JSON.stringify({"searchTerms":searchTerms, "booksToSearch":booksToSearch,
-								"startingPoint":simpleSearchCurrentLen, "responseSize":100});
+							"startingPoint":simpleSearchCurrentLen, "responseSize":100, "conditional":conditional});
 
 		sendRequest(data=data, method=method).then(function(response){
+
 			appendSimpleSearchResults(parseSimpleSearchResults(JSON.parse(response), false));
 			formatSimpleSearchResults(searchTerms, false);
 			hideSSLoader();
