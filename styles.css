@@ -144,7 +144,9 @@ textarea {
   min-width: 10px;
   width: 30%;
   margin-top: 10px;
-
+  position: absolute;
+  bottom: 5px;
+  margin-left: 30%;
 }
 
 
