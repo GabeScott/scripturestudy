@@ -302,6 +302,14 @@ tr:nth-child(even) {
   left: 10px;
 }
 
+.ssNoteArea{
+  width:100%;
+  height:75%;
+  line-height:1.5em;
+  overflow:auto;
+  padding:5px;
+}
+
 
 .searchArea{
   position: absolute;
