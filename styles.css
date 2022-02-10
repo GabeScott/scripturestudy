@@ -185,8 +185,13 @@ textarea {
 }
 
 #simpleSearchTextarea{
-  height:65%; 
   text-align: left;
+  height: 80%;
+}
+
+#upperModalContent{
+  display: block;
+  height: 40%;
 }
 
 #ldssSearchTextarea{
@@ -214,9 +219,14 @@ textarea {
   margin:auto;
 }
 
-#simpleSearchResults, #ldssSearchResults{
+#ldssSearchResults{
   display: none;
   height: 100%;
+}
+
+#simpleSearchResults{
+  display: none;
+  height: 60%;
 }
 
 #searchScripturesButton, #comeFollowMeButton{

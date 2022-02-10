@@ -11,30 +11,33 @@
 
 		  <!-- Modal content -->
 		  <div class="modal-content">
-		    <span class="close">&times;</span>
-		    <h2 id = "simpleSearchHeader">Simple Search</h2>
-		    <p>Where to search...</p>
-		    <input type="checkbox" id="OT" name="OT" value="OT">
-			<label for="OT">OT</label>
-			<input type="checkbox" id="NT" name="NT" value="NT">
-			<label for="NT">NT</label>
-			<input type="checkbox" id="BOM" name="BOM" value="BOM">
-			<label for="BOM">BoM</label>
-			<input type="checkbox" id="D&C" name="D&C" value="D&C">
-			<label for="D&C">D&C</label>
-			<input type="checkbox" id="POGP" name="PoGP" value="PoGP">
-			<label for="POGP">PoGP</label><br><br>
+		  	<div id="upperModalContent">
+			    <span class="close">&times;</span>
+			    <h2 id = "simpleSearchHeader">Simple Search</h2>
+			    <p>Where to search...</p>
+			    <input type="checkbox" id="OT" name="OT" value="OT">
+				<label for="OT">OT</label>
+				<input type="checkbox" id="NT" name="NT" value="NT">
+				<label for="NT">NT</label>
+				<input type="checkbox" id="BOM" name="BOM" value="BOM">
+				<label for="BOM">BoM</label>
+				<input type="checkbox" id="D&C" name="D&C" value="D&C">
+				<label for="D&C">D&C</label>
+				<input type="checkbox" id="POGP" name="PoGP" value="PoGP">
+				<label for="POGP">PoGP</label><br><br>
 
-			<input type="radio" id="OR" name="conditional" checked>
-			<label for="OR">Or</label>
-			<input type="radio" id="AND" name="conditional">
-     		<label for="AND">And</label> 						
-			<p>Search Terms: (Separate multiple by commas)</p>
-		    <input id="simpleSearchTerms" type="text"></input>
-		    <br>
-		    <button id='simpleSearchButton' onclick="simpleSearch()">Search</button>
-		    <br><br>
-		    <div class="loader" id="SSStatusLoader"></div>
+				<input type="radio" id="OR" name="conditional" checked>
+				<label for="OR">Or</label>
+				<input type="radio" id="AND" name="conditional">
+	     		<label for="AND">And</label> 						
+				<p>Search Terms: (Separate multiple by commas)</p>
+			    <input id="simpleSearchTerms" type="text"></input>
+			    <br>
+			    <button id='simpleSearchButton' onclick="simpleSearch()">Search</button>
+			    <br><br>
+			    <div class="loader" id="SSStatusLoader"></div>
+			</div>
+
 		    <div id = "simpleSearchResults">
 			    <h3>Results:</h3>
 			    <div class="ssNoteArea" id="simpleSearchTextarea" onscroll="getMoreSimpleSearchResults()"></div>
