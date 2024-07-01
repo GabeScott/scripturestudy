@@ -81,6 +81,16 @@ document.getElementById("simpleSearchTerms").addEventListener("keyup", function(
   }
 });
 
+document.getElementById("langSearchReference").addEventListener("keyup", function(event) {
+  // Number 13 is the "Enter" key on the keyboard
+  if (event.keyCode === 13) {
+    // Cancel the default action, if needed
+    event.preventDefault();
+    // Trigger the button element with a click
+    langSearch();
+  }
+});
+
 
 function openLDSSSearchMenu(){
 	document.getElementById("searchLDSSModal").style.display="block"
@@ -271,6 +281,22 @@ function openScriptureSearchMenu(){
 }
 
 
+function openLanguageSearchMenu(){
+	document.getElementById("languageSearchModal").style.display="block"
+
+	window.onclick = function(event) {
+	  if (event.target == document.getElementById("languageSearchModal")) {
+	    document.getElementById("languageSearchModal").style.display = "none";
+	  }
+	}
+
+	document.getElementsByClassName("close")[0].onclick = function() {
+	  document.getElementById("languageSearchModal").style.display = "none";
+	}
+
+}
+
+
 function openComeFollowMeMenu(){
 	// 
 	document.getElementById("comeFollowMeModal").style.display="block"
@@ -428,6 +454,42 @@ function simpleSearch(){
 	})
 }
 
+function langSearch(){
+	document.getElementById("langSearchTextarea").scrollTop = 0;
+	const reference = document.getElementById("langSearchReference").value
+	const langsToSearch = getLangsToSearch()
+	method = '/simplesearch';
+	data = JSON.stringify({"isLang":true, "languages":langsToSearch,
+							"reference":reference});
+
+	sendRequest(data=data, method=method).then(function(response){
+		updateLanguageSearchResults(JSON.parse(response));
+	})
+}
+
+
+function getLangsToSearch(){
+	var langsToSearch = []
+	if(document.getElementById("eng").checked)
+		langsToSearch.push("eng");
+
+	if(document.getElementById("spa").checked)
+		langsToSearch.push("spa");
+
+	if(document.getElementById("fra").checked)
+		langsToSearch.push("fra");
+
+	if(document.getElementById("ita").checked)
+		langsToSearch.push("ita");
+
+	if(document.getElementById("por").checked)
+		langsToSearch.push("por");
+
+	return langsToSearch;
+
+}
+
+
 function showSSLoader(){
 	document.getElementById("SSStatusLoader").style.visibility = "visible";
 }
@@ -498,7 +560,30 @@ function formatSimpleSearchResults(searchTerms, isStart = true){
 	document.getElementById("simpleSearchTextarea").innerHTML = text;
 }
 
+function updateLanguageSearchResults(response){
+	var html = "";
 
+	for (const key in response) {
+		lang = "";
+		if (key == "eng")
+			lang = "English";
+		if (key == "fra")
+			lang = "French";
+		if (key == "spa")
+			lang = "Spanish";
+		if (key == "ita")
+			lang = "Italian";
+		if (key == "por")
+			lang = "Portuguese";
+
+	  if (response.hasOwnProperty(key)) {
+	    html += `<b>${lang}</b> <br> ${response[key]}<br><br>`;
+	  }
+	}
+
+	document.getElementById("langSearchResults").style.display="block";
+	document.getElementById("langSearchTextarea").innerHTML = html;
+}
 
 function updateSimpleSearchResults(response){
 	document.getElementById("simpleSearchResults").style.display="block";

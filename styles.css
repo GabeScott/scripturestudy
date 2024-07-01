@@ -177,6 +177,10 @@ textarea {
   float:right;
 }
 
+#langSearchButton{
+  margin-top:10px;
+}
+
 #SSStatusLoader, #LDSSStatusLoader{
   margin:auto;
   float:none;
@@ -194,6 +198,11 @@ textarea {
   height: 40%;
 }
 
+#upperModalContentLang{
+  display: block;
+  height: 20%;
+}
+
 #ldssSearchTextarea{
   height:70%; 
   text-align: left;
@@ -205,6 +214,11 @@ textarea {
 
 #simpleSearchButton{
   display: block;
+  width: fit-content; 
+  margin: auto;
+}
+
+#languageSearchButton{
   width: fit-content; 
   margin: auto;
 }
@@ -229,8 +243,8 @@ textarea {
   height: 60%;
 }
 
-#searchScripturesButton, #comeFollowMeButton{
-  margin: 10px 75px 0px 0px;
+#languageSearchButton, #searchScripturesButton, #comeFollowMeButton{
+  margin: 10px 50px 0px 0px;
 }
 
 #staticDBText{

@@ -45,6 +45,39 @@
 		  </div>
 		</div>
 
+		<div id="languageSearchModal" class="modal">
+
+		  <!-- Modal content -->
+		  <div class="modal-content">
+		  	<div id="upperModalContentLang">
+			    <span class="close">&times;</span>
+			    <h2 id = "langSearchHeader">Simple Search</h2>
+			    <p>Where to search...</p>
+			    <input type="checkbox" id="eng" name="eng" value="eng" checked>
+				<label for="eng">English</label>
+				<input type="checkbox" id="spa" name="spa" value="spa" checked>
+				<label for="spa">Spanish</label>
+				<input type="checkbox" id="fra" name="fra" value="fra" checked>
+				<label for="fra">French</label>
+				<input type="checkbox" id="por" name="por" value="por" checked>
+				<label for="por">Portuguese</label>
+				<input type="checkbox" id="ita" name="ita" value="ita" checked>
+				<label for="ita">Italian</label><br><br>
+						
+				<p>Reference (one verse only):</p>
+			    <input id="langSearchReference" type="text"></input>
+			    <br>
+			    <button id='langSearchButton' onclick="langSearch()">Search</button>
+			    <br><br>
+			</div>
+
+		    <div id = "langSearchResults">
+			    <h3>Results:</h3>
+			    <div class="ssNoteArea" id="langSearchTextarea"></div>
+			</div>
+		  </div>
+		</div>
+
 		<div id="comeFollowMeModal" class="modal">
 
 		  <!-- Modal content -->
@@ -94,6 +127,7 @@
 
 			<div id="DBStatusDiv">
 				<button id="searchScripturesButton" onclick="openScriptureSearchMenu()">Search Scriptures</button>
+				<button id="languageSearchButton" onclick="openLanguageSearchMenu()">Compare Languages</button>
 				<button id="comeFollowMeButton" onclick="openComeFollowMeMenu()">Come Follow Me</button>	
 				<button id="ldssSearchButton" onclick="openLDSSSearchMenu()">Search Commentary</button>				
 				<div class="loader" id="DBStatusLoader"></div>
